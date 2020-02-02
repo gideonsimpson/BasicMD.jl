@@ -104,7 +104,6 @@ function RWM!(X₀, V, β, Δt, n_iters)
         a = min(1, pp/p0);
 
         if rand()<a
-            naccept = naccept+1;
             @. X₀ = Xp;
             p0 = pp;
         end
