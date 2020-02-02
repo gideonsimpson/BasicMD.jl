@@ -13,6 +13,11 @@ This is intended to be simple collection for small scale problems and code devel
 All of these methods have two versions, `Integrator` and `Integrator!`.  The `Integrator!` routine performs an in place transformation on the starting position (and momentum, where appropriate), while `Integrator` copies over the initial condition.  `Integrator` also accepts the optional argument `return_trajectory=true/false`, which will return the entire time series data.
 
 # Caveats
+* The code assumes that the state space is vector valued.  Thus, even if the problem is one dimensional, you should have initial points and functions formatted appropriately, i.e.
+```
+> x0 = [1.0]
+```
+
 * The mass matrix, `M`, used in the inertial Langevin integrators and Hamiltonian methods must be diagonal.  This restriction is in place for performance purposes.
 
 * BBK is currently implemented for a slightly different version of the Langevin SDE than ABOBA/BAOAB.  BBK requires inverting the mass matrix while ABOBA/BAOAB require its square root.
