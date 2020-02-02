@@ -15,21 +15,9 @@ All of these methods have two versions, `Integrator` and `Integrator!`.  The `In
 # Caveats
 * The mass matrix, `M`, used in the inertial Langevin integrators and Hamiltonian methods must be diagonal.  This restriction is in place for performance purposes.
 
-* BBK is currently implemented for the SDE:
-$$
-\begin{split}
-dq& = M^{-1}p dt\\
-dp & = -\nabla V(q)dt - \gamma M^{-1}p dt + \sqrt{2\beta^{-1}\gamma}dW
-\end{split}
-$$
-In contrast, the ABOBA, BAOAB, are implemented for
-$$
-\begin{split}
-dq& = M^{-1}p dt\\
-dp & = -\nabla V(q)dt - \gamma p dt + \sqrt{2\beta^{-1}\gamma}\sqrt{M}dW
-\end{split}
-$$
-Both will sample the associated Boltzmann distribution, but the SDE trajectories will differ when $M\neq \mathrm{Id.}$
+* BBK is currently implemented for a slightly different version of the Langevin SDE than ABOBA/BAOAB.  BBK requires inverting the mass matrix while ABOBA/BAOAB require its square root.
+
+Both will sample the associated Boltzmann distribution, but the SDE trajectories will differ when `M≂̸I`.
 
 # TO DO
 Before reaching a 1.0, the goals are:
