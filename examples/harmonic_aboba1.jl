@@ -28,11 +28,11 @@ ABOBA!(Q₀, P₀, gradV!, β, γ, M, Δt, n_iters);
 @printf("In Place Q after %d iterations: %g\n",n_iters, Q₀[1])
 
 Random.seed!(100);
-Q, P = ABOBA(Q₀, P₀, gradV!, β, γ, M, Δt, n_iters, return_trajectory=false);
+Q, P = ABOBA(q₀, p₀, gradV!, β, γ, M, Δt, n_iters, return_trajectory=false);
 @printf("Q after %d iterations: %g\n",n_iters, Q[1])
 
 Random.seed!(100);
-Qvals, Pvals = ABOBA(Q₀, P₀, gradV!, β, γ, M, Δt, n_iters);
+Qvals, Pvals = ABOBA(q₀, p₀, gradV!, β, γ, M, Δt, n_iters);
 histogram(Qvals[:],label="Samples",normalize=true)
 qq=LinRange(-2,2,200)
 plot!(qq, sqrt((β)/(2*π))*exp.(-0.5 * β * qq.^2),label="Density")
