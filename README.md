@@ -16,6 +16,7 @@ All of these methods have two versions, `Integrator` and `Integrator!`.  The `In
 Example codes include:
 
 * 1D Harmonic potential
+* 1D Double Well Potential
 
 # Caveats
 * The code assumes that the state space is vector valued.  Thus, even if the problem is one dimensional, you should have initial points and functions formatted appropriately, i.e.
