@@ -10,7 +10,6 @@ push!(LOAD_PATH,"../src/")
 using JuBasicMD: MALA, MALA!
 
 β = 5.0;
-# initial condition is 2D
 x₀ = [0.0];
 seed = 100;
 Δt = 1e-1;
