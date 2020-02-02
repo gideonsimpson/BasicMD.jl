@@ -205,7 +205,6 @@ function MALA!(X₀, V, gradV!, β, Δt, n_iters)
         a = min(1, (gp * pp)/(g0 * p0));
 
         if rand()<a
-            naccept = naccept+1;
             @. X₀ = Xp;
             @. gradV0 = gradVp;
             p0 = pp;
