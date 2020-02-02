@@ -2,7 +2,6 @@
 using Plots
 using Printf
 using Random
-using QuadGK
 using LinearAlgebra
 
 push!(LOAD_PATH,"../src/")
