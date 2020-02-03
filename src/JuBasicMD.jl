@@ -50,21 +50,19 @@ function RWM(x₀, V, β, Δt, n_iters; return_trajectory=true)
         avals =zeros(n_iters);
     end
 
-    p0 = Boltzmann_likelihood(X₀, V, β);
-
+    V0 = V(X₀);
     gaussian_coef =  sqrt(2 * Δt /β);
-
     for j = 1:n_iters
 
         @. Xp = X₀ + gaussian_coef * randn();
 
-        pp = Boltzmann_likelihood(Xp, V, β);
-        a = min(1, pp/p0);
+        Vp = V(Xp);
+        a = min(1, exp(β*(V0-Vp)))
 
         if rand()<a
             naccept = naccept+1;
             @. X₀ = Xp;
-            p0 = pp;
+            V0 = Vp;
         end
 
         if(return_trajectory)
@@ -92,20 +90,18 @@ function RWM!(X₀, V, β, Δt, n_iters)
     # preallocate data structures
     Xp = similar(X₀);
 
-    p0 = Boltzmann_likelihood(X₀, V, β);
-
+    V0 = V(X₀);
     gaussian_coef =  sqrt(2 * Δt/β);
-
     for j = 1:n_iters
 
         @. Xp = X₀ + gaussian_coef * randn();
 
-        pp = Boltzmann_likelihood(Xp, V, β);
-        a = min(1, pp/p0);
+        Vp = V(Xp);
+        a = min(1, exp(β*(V0-Vp)))
 
         if rand()<a
             @. X₀ = Xp;
-            p0 = pp;
+            V0 = Vp;
         end
     end
     X₀
