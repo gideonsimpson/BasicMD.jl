@@ -131,29 +131,27 @@ function MALA(x₀, V, gradV!, β, Δt, n_iters; return_trajectory=true)
         avals =zeros(n_iters);
     end
 
-    p0 = Boltzmann_likelihood(X₀, V, β);
-
+    V0 = V(X₀);
     gaussian_coef =  sqrt(2 * Δt/β);
-
     gradV!(gradV0,X₀);
     for j = 1:n_iters
 
         @. Xp = X₀ - Δt * gradV0 + gaussian_coef * randn();
 
-        pp = Boltzmann_likelihood(Xp, V, β);
+        Vp = V(Xp);
 
         gradV!(gradVp,Xp);
 
         g0 = MALA_likelihood(X₀, Xp, gradV0, β, Δt);
         gp = MALA_likelihood(Xp, X₀, gradVp, β, Δt);
 
-        a = min(1, (gp * pp)/(g0 * p0));
+        a = min(1, gp/g0 * exp(β*(V0-Vp)));
 
         if rand()<a
             naccept = naccept+1;
             @. X₀ = Xp;
             @. gradV0 = gradVp;
-            p0 = pp;
+            V0 = Vp;
         end
         if(return_trajectory)
             @. Xvals[:,j] = X₀;
@@ -182,28 +180,26 @@ function MALA!(X₀, V, gradV!, β, Δt, n_iters)
     gradV0 = similar(X₀);
     gradVp = similar(X₀);
 
-    p0 = Boltzmann_likelihood(X₀, V, β);
-
+    V0 = V(X₀);
     gaussian_coef =  sqrt(2 * Δt/β);
-
     gradV!(gradV0,X₀);
     for j = 1:n_iters
 
         @. Xp = X₀ - Δt * gradV0 + gaussian_coef * randn();
 
-        pp = Boltzmann_likelihood(Xp, V, β);
+        Vp = V(Xp);
 
         gradV!(gradVp,Xp);
 
         g0 = MALA_likelihood(X₀, Xp, gradV0, β, Δt);
         gp = MALA_likelihood(Xp, X₀, gradVp, β, Δt);
 
-        a = min(1, (gp * pp)/(g0 * p0));
+        a = min(1, gp/g0 * exp(β*(V0-Vp)));
 
         if rand()<a
             @. X₀ = Xp;
             @. gradV0 = gradVp;
-            p0 = pp;
+            V0 = Vp;
         end
     end
     X₀
