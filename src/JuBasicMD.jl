@@ -614,4 +614,50 @@ function HMC(x₀, V, gradV!, β, M, Δt, nΔt, n_iters; return_trajectory = tru
 end
 
 
+"""
+    HMC!(Q₀, V, gradV!, β, M, Δt, nΔt, n_iters)
+
+In place HMC sampler
+"""
+
+function HMC(Q₀, V, gradV!, β, M, Δt, nΔt, n_iters)
+
+    P₀ = similar(x₀);
+    Qp = similar(x₀);
+    Pp = similar(x₀);
+    gradVp = similar(x₀);
+    Phalf = similar(P₀);
+    d = length(x₀);
+
+    V₀ = V(Q₀);
+    for j in 1:n_iters
+        @. P₀ = sqrt(M/β*M) * randn();
+        E₀ = V₀ + 0.5 * P₀⋅ (P₀ ./M);
+
+        # run Verlet integrator
+        Qp = copy(Q₀);
+        Pp = copy(P₀);
+        gradV!(gradVp, Qp);
+        for k in 1:nΔt
+            @. Phalf = Pp - 0.5 * Δt * gradVp;
+            @. Qp = Qp + Δt * Phalf/M;
+            gradV!(gradVp,Qp);
+            @. Pp = Phalf - 0.5 * Δt * gradVp;
+        end
+
+        # compute energy
+        Vp = V(Qp);
+        Ep = Vp + 0.5 * Pp⋅ (Pp ./M);
+
+        # accept/reject
+        a = min(1, exp( β *(E₀-Ep)));
+        if rand()<a
+            naccept = naccept+1;
+            @. Q₀ = Qp;
+            V₀ = Vp;
+        end
+    end
+    Q₀
+end
+
 end # end module
