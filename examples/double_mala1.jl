@@ -31,6 +31,8 @@ X, a = MALA(x₀, V,gradV!, β, Δt, n_iters, return_trajectory=false);
 @printf("X after %d iterations: %g\n",n_iters, X[1])
 @printf("Mean acceptance rate after %d iterations: %g\n",n_iters, a)
 
+Random.seed!(100);
+Xvals,avals =MALA(x₀, V,gradV!, β, Δt, n_iters);
 Z = quadgk(x->exp(-β*V(x)),-Inf,Inf)[1]
 qq = LinRange(-2,2,401)
 histogram(Xvals[:],label="Samples",normalize=true)
