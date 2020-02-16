@@ -574,7 +574,7 @@ function HMC(x₀, V, gradV!, β, M, Δt, nΔt, n_iters; return_trajectory = tru
 
     V₀ = V(Q₀);
     for j in 1:n_iters
-        @. P₀ = sqrt(M/β*M) * randn();
+        @. P₀ = sqrt(M/β) * randn();
         E₀ = V₀ + 0.5 * P₀⋅ (P₀ ./M);
 
         # run Verlet integrator
@@ -620,7 +620,7 @@ end
 In place HMC sampler
 """
 
-function HMC(Q₀, V, gradV!, β, M, Δt, nΔt, n_iters)
+function HMC!(Q₀, V, gradV!, β, M, Δt, nΔt, n_iters)
 
     P₀ = similar(x₀);
     Qp = similar(x₀);
@@ -631,7 +631,7 @@ function HMC(Q₀, V, gradV!, β, M, Δt, nΔt, n_iters)
 
     V₀ = V(Q₀);
     for j in 1:n_iters
-        @. P₀ = sqrt(M/β*M) * randn();
+        @. P₀ = sqrt(M/β) * randn();
         E₀ = V₀ + 0.5 * P₀⋅ (P₀ ./M);
 
         # run Verlet integrator
