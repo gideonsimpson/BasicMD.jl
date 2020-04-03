@@ -23,3 +23,14 @@ abstract type FirstOrderNonMetropolisSamplerState <: NonMetropolisSamplerState e
 abstract type SecondOrderNonMetropolisSamplerState <: NonMetropolisSamplerState end
 
 # abstract type AbstractEnergyFunction end
+struct Options
+        n_iters::Int
+        save_trajectory::Bool
+end
+
+function Options(;
+        n_iters = 10^4,
+        save_trajectory = true)
+
+        return Options(n_iters, save_trajectory)
+end

@@ -1,10 +1,8 @@
 # sample from a harmonic potential in 1D using RWM
-# using Plots
+using Plots
 using Printf
 using Random
 using LinearAlgebra
-using Revise
-using BenchmarkTools
 
 push!(LOAD_PATH,"../src/")
 
@@ -14,7 +12,7 @@ using JuBasicMD
 x₀ = [0.0];
 seed = 100;
 Δt = 1e-1;
-n_iters = 10^1;
+n_iters = 10^4;
 
 V = X -> 0.5 * X⋅X;
 
@@ -22,19 +20,19 @@ Random.seed!(100);
 X₀ = copy(x₀);
 
 sampler = RWM(V, β, Δt);
-sample_trajectory!(X₀, sampler, n_iters);
+sample_trajectory!(X₀, sampler, options=Options(n_iters=n_iters));
 @printf("In Place X after %d iterations: %g\n",n_iters, X₀[1])
 
 Random.seed!(100);
-X_vals, a_vals = sample_trajectory(x₀, sampler, n_iters);
+X, a = sample_trajectory(x₀, sampler, options=Options(n_iters=n_iters,save_trajectory=false));
+@printf("X after %d iterations: %g\n",n_iters, X[1])
+@printf("Mean acceptance rate after %d iterations: %g\n",n_iters, a[end])
 
-@printf("X after %d iterations: %g\n",n_iters, X_vals[end][1])
-@printf("Mean acceptance rate after %d iterations: %g\n",n_iters, a_vals[end])
-#
-# Random.seed!(100);
-# Xvals,avals =RWM(x₀, V, β, Δt, n_iters);
-# histogram(Xvals[:],label="Samples",normalize=true)
-# qq=LinRange(-2,2,200)
-# plot!(qq, sqrt((β)/(2*π))*exp.(-0.5 * β * qq.^2),label="Density")
-# xlabel!("x")
-# ylabel!("Frequency")
+Random.seed!(100);
+X_vals, a_vals = sample_trajectory(x₀, sampler, options=Options(n_iters=n_iters));
+
+histogram([X[1] for X in X_vals],label="Samples",normalize=true)
+qq=LinRange(-2,2,200)
+plot!(qq, sqrt((β)/(2*π))*exp.(-0.5 * β * qq.^2),label="Density")
+xlabel!("x")
+ylabel!("Frequency")

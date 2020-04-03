@@ -1,9 +1,9 @@
 
-function sample_trajectory!(x::Tx, sampler::S, n_iters::Int) where {Tx, S<:MetropolisSampler}
+function sample_trajectory!(x::Tx, sampler::S; options=Options()) where {Tx, S<:AbstractSampler}
 
     state = InitState(sampler, x);
 
-    for i = 1:n_iters
+    for i = 1:options.n_iters
         UpdateState!(state, sampler);
     end
     @. x = state.x
@@ -11,22 +11,30 @@ function sample_trajectory!(x::Tx, sampler::S, n_iters::Int) where {Tx, S<:Metro
     x
 end
 
-function sample_trajectory(initial_x::Tx, sampler::S, n_iters::Int) where {Tx,  S<:MetropolisSampler}
+function sample_trajectory(initial_x::Tx, sampler::S; options=Options()) where {Tx,  S<:MetropolisSampler}
 
     n_accept = Int(0);
 
     state = InitState(sampler, initial_x);
 
     # allocate memory for samples
-    samples = Tx[similar(initial_x) for j = 1:n_iters];
-    acceptance_rates = zeros(n_iters);
-
-    for i = 1:n_iters
-        UpdateState!(state,  sampler);
-        n_accept+=state.accept;
-        @. samples[i] = state.x;
-        acceptance_rates[i] = n_accept/n_iters;
+    if(options.save_trajectory)
+        samples = Tx[similar(initial_x) for j = 1:options.n_iters];
+        acceptance_rates = zeros(options.n_iters);
     end
 
-    return samples, acceptance_rates
+    for i = 1:options.n_iters
+        UpdateState!(state,  sampler);
+        n_accept+=state.accept;
+        if(options.save_trajectory)
+
+            @. samples[i] = state.x;
+            acceptance_rates[i] = n_accept/options.n_iters;
+        end
+    end
+    if(options.save_trajectory)
+        return samples, acceptance_rates
+    else
+        return state.x, n_accept/options.n_iters
+    end
 end

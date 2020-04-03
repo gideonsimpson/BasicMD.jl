@@ -32,7 +32,7 @@ function MALA_likelihood(X₀, X₁, gradV0, β, Δt)
 end
 
 export sample_trajectory, sample_trajectory!,
-
+    Options,
     RWM
 
 include("types.jl")
