@@ -2,7 +2,6 @@ module JuBasicMD
 
 using LinearAlgebra
 
-include("types.jl")
 
 
 """
@@ -32,83 +31,15 @@ function MALA_likelihood(X₀, X₁, gradV0, β, Δt)
     return exp( -β * (norminc2) / (4*Δt) );
 end
 
-"""
-    RWM(x₀, V, β, Δt, n_iters, return_trajectory=true)
+export sample_trajectory, sample_trajectory!,
 
-Run an RWM sampler for distribution exp(-β V).  Proposal variance is
-sqrt(2*Δt/β).  If `return_trajectory=true`, then the entire time series is
-returned.  The acceptance rates are also returned.
-"""
-function RWM(x₀, V, β, Δt, n_iters; return_trajectory=true)
+    RWM
 
-    # preallocate data structures
-    X₀ = copy(x₀);
-    Xp = similar(x₀);
-    d = length(x₀)
+include("types.jl")
+include("sample.jl")
+# RWM methods
+include("metropolis/zeroth_order/rwm.jl")
 
-    naccept = 0;
-
-    if(return_trajectory)
-        Xvals =zeros(d,n_iters);
-        avals =zeros(n_iters);
-    end
-
-    V0 = V(X₀);
-    gaussian_coef =  sqrt(2 * Δt /β);
-    for j = 1:n_iters
-
-        @. Xp = X₀ + gaussian_coef * randn();
-
-        Vp = V(Xp);
-        a = min(1, exp(β*(V0-Vp)))
-
-        if rand()<a
-            naccept = naccept+1;
-            @. X₀ = Xp;
-            V0 = Vp;
-        end
-
-        if(return_trajectory)
-            @. Xvals[:,j] = X₀;
-            avals[j] = naccept/j;
-        end
-
-    end
-    if return_trajectory
-        return Xvals, avals
-    else
-        return X₀, naccept/n_iters
-    end
-
-end # end RWM
-
-"""
-    RWM!(X₀, V, β, Δt, n_iters)
-
-Run an in place RWM sampler for distribution exp(-β V).  Proposal variance is
-sqrt(2*Δt/β).
-"""
-function RWM!(X₀, V, β, Δt, n_iters)
-
-    # preallocate data structures
-    Xp = similar(X₀);
-
-    V0 = V(X₀);
-    gaussian_coef =  sqrt(2 * Δt/β);
-    for j = 1:n_iters
-
-        @. Xp = X₀ + gaussian_coef * randn();
-
-        Vp = V(Xp);
-        a = min(1, exp(β*(V0-Vp)))
-
-        if rand()<a
-            @. X₀ = Xp;
-            V0 = Vp;
-        end
-    end
-    X₀
-end # end RWM!
 
 """
     MALA(x₀, V, gradV!, β, Δt, n_iters, return_trajectory=true)
