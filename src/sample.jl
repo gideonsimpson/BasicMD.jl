@@ -35,3 +35,26 @@ function sample_trajectory(initial_x::Tx, sampler::S; options=Options()) where {
         return state.x, n_accept/options.n_iters
     end
 end
+
+
+function sample_trajectory(initial_x::Tx, sampler::S; options=Options()) where {Tx,  S<:NonMetropolisSampler}
+
+    state = InitState(initial_x, sampler);
+
+    # allocate memory for samples
+    if(options.save_trajectory)
+        samples = Tx[similar(initial_x) for j = 1:options.n_iters];
+    end
+
+    for i = 1:options.n_iters
+        UpdateState!(state, sampler);
+        if(options.save_trajectory)
+            @. samples[i] = state.x;
+        end
+    end
+    if(options.save_trajectory)
+        return samples
+    else
+        return state.x
+    end
+end

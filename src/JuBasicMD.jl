@@ -15,7 +15,7 @@ end
 
 export sample_trajectory, sample_trajectory!,
     Options,
-    RWM, MALA
+    RWM, MALA, EM
 
 include("types.jl")
 include("sample.jl")
@@ -23,6 +23,8 @@ include("sample.jl")
 include("metropolis/zeroth_order/rwm.jl")
 # MALA methods
 include("metropolis/first_order/mala.jl")
+# EM methods
+include("nonmetropolis/first_order/em.jl")
 
 """
     EM(x₀, V, gradV!, β, Δt, n_iters, return_trajectory=true)
