@@ -13,21 +13,22 @@ end
 mutable struct RWMState{Tx} <:ZerothOrderMetropolisSamplerState
     x::Tx
     x_previous::Tx
+    V::AbstractFloat
     V_previous::AbstractFloat
     accept::Int
 end
 
 function InitState(sampler::RWM, initial_x::Tx) where Tx
 
-    V_previous = sampler.V(initial_x);
-    return RWMState(copy(initial_x), copy(initial_x), V_previous, Int(0));
+    V = sampler.V(initial_x);
+    return RWMState(copy(initial_x), copy(initial_x), V, V, Int(0));
 end
 
 function UpdateState!(state::RWMState{Tx}, sampler::RWM) where Tx
 
     @. state.x = state.x_previous +  sampler.gaussian_coeff * randn();
-    V_current = sampler.V(state.x);
-    a = min(1, exp(sampler.β*(state.V_previous-V_current)))
+    state.V = sampler.V(state.x);
+    a = min(1, exp(sampler.β*(state.V_previous-state.V)))
 
     if rand()<a
         @. state.x_previous = state.x;

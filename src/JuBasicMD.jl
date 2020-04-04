@@ -15,129 +15,16 @@ function Boltzmann_likelihood(x, V, β)
     return w
 end
 
-"""
-    MALA_likelihood(X₀, X₁, gradV0, β, Δt)
-
-Compute the likelihood of the MALA proposal X₀→X₁ for
-potential with gradient gradV0 at inverse temperature β
-and time step Δt
-"""
-function MALA_likelihood(X₀, X₁, gradV0, β, Δt)
-    #norm of increment squared
-    norminc2 = 0.0;
-    for i = 1:length(X₀)
-        norminc2 += (X₁[i]-X₀[i] + Δt * gradV0[i])^2;
-    end
-    return exp( -β * (norminc2) / (4*Δt) );
-end
-
 export sample_trajectory, sample_trajectory!,
     Options,
-    RWM
+    RWM, MALA
 
 include("types.jl")
 include("sample.jl")
 # RWM methods
 include("metropolis/zeroth_order/rwm.jl")
-
-
-"""
-    MALA(x₀, V, gradV!, β, Δt, n_iters, return_trajectory=true)
-
-Run a MALA sampler for distribution exp(-β V).  Proposal variance is
-sqrt(2*Δt/β).  If `return_trajectory=true`, then the entire time series is
-returned.  The acceptance rates are also returned.
-
-"""
-function MALA(x₀, V, gradV!, β, Δt, n_iters; return_trajectory=true)
-
-    # preallocate data structures
-    X₀ = copy(x₀);
-    Xp = similar(x₀);
-    gradV0 = similar(x₀);
-    gradVp = similar(x₀);
-    d = length(x₀)
-
-    naccept = 0;
-
-    if(return_trajectory)
-        Xvals =zeros(d,n_iters);
-        avals =zeros(n_iters);
-    end
-
-    V0 = V(X₀);
-    gaussian_coef =  sqrt(2 * Δt/β);
-    gradV!(gradV0,X₀);
-    for j = 1:n_iters
-
-        @. Xp = X₀ - Δt * gradV0 + gaussian_coef * randn();
-
-        Vp = V(Xp);
-
-        gradV!(gradVp,Xp);
-
-        g0 = MALA_likelihood(X₀, Xp, gradV0, β, Δt);
-        gp = MALA_likelihood(Xp, X₀, gradVp, β, Δt);
-
-        a = min(1, gp/g0 * exp(β*(V0-Vp)));
-
-        if rand()<a
-            naccept = naccept+1;
-            @. X₀ = Xp;
-            @. gradV0 = gradVp;
-            V0 = Vp;
-        end
-        if(return_trajectory)
-            @. Xvals[:,j] = X₀;
-            avals[j] = naccept/j;
-        end
-
-    end
-    if return_trajectory
-        return Xvals, avals
-    else
-        return X₀, naccept/n_iters
-    end
-
-end # end MALA
-
-"""
-    MALA!(x₀, V, gradV!, β, Δt, n_iters, return_trajectory=true)
-
-Run an in place MALA sampler for distribution exp(-β V).  Proposal variance is
-sqrt(2*Δt/β).
-"""
-function MALA!(X₀, V, gradV!, β, Δt, n_iters)
-
-    # preallocate data structures
-    Xp = similar(X₀);
-    gradV0 = similar(X₀);
-    gradVp = similar(X₀);
-
-    V0 = V(X₀);
-    gaussian_coef =  sqrt(2 * Δt/β);
-    gradV!(gradV0,X₀);
-    for j = 1:n_iters
-
-        @. Xp = X₀ - Δt * gradV0 + gaussian_coef * randn();
-
-        Vp = V(Xp);
-
-        gradV!(gradVp,Xp);
-
-        g0 = MALA_likelihood(X₀, Xp, gradV0, β, Δt);
-        gp = MALA_likelihood(Xp, X₀, gradVp, β, Δt);
-
-        a = min(1, gp/g0 * exp(β*(V0-Vp)));
-
-        if rand()<a
-            @. X₀ = Xp;
-            @. gradV0 = gradVp;
-            V0 = Vp;
-        end
-    end
-    X₀
-end # end MALA!
+# MALA methods
+include("metropolis/first_order/mala.jl")
 
 """
     EM(x₀, V, gradV!, β, Δt, n_iters, return_trajectory=true)

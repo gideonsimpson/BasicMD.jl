@@ -6,7 +6,7 @@ using LinearAlgebra
 
 push!(LOAD_PATH,"../src/")
 
-using JuBasicMD: MALA, MALA!
+using JuBasicMD
 
 β = 5.0;
 x₀ = [0.0];
@@ -22,17 +22,20 @@ end
 
 Random.seed!(100);
 X₀ = copy(x₀);
-MALA!(X₀, V, gradV!, β, Δt, n_iters);
-@printf("In Place X after %d iterations: %g\n",n_iters, X₀[1])
 
+sampler = MALA(V, gradV!, β, Δt);
+sample_trajectory!(X₀, sampler, options=Options(n_iters=n_iters));
+@printf("In Place X after %d iterations: %g\n",n_iters, X₀[1])
+#
 Random.seed!(100);
-X, a = MALA(x₀, V,gradV!, β, Δt, n_iters, return_trajectory=false);
+X, a = sample_trajectory(x₀, sampler, options=Options(n_iters=n_iters,save_trajectory=false));
 @printf("X after %d iterations: %g\n",n_iters, X[1])
 @printf("Mean acceptance rate after %d iterations: %g\n",n_iters, a)
+#
 
 Random.seed!(100);
-Xvals,avals =MALA(x₀, V, gradV!,β, Δt, n_iters);
-histogram(Xvals[:],label="Samples",normalize=true)
+X_vals, a_vals = sample_trajectory(x₀, sampler, options=Options(n_iters=n_iters));
+histogram([X[1] for X in X_vals],label="Samples",normalize=true)
 qq=LinRange(-2,2,200)
 plot!(qq, sqrt((β)/(2*π))*exp.(-0.5 * β * qq.^2),label="Density")
 xlabel!("x")
