@@ -10,7 +10,7 @@ function RWM(V, β, Δt)
     return RWM(V, β, Δt, gaussian_coeff)
 end
 
-mutable struct RWMState{Tx} <:ZerothOrderMetropolisSamplerState
+mutable struct RWMState{Tx} <:FirstOrderMetropolisSamplerState
     x::Tx
     x_previous::Tx
     V::AbstractFloat
