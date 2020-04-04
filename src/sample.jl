@@ -1,13 +1,10 @@
 
 function sample_trajectory!(x::Tx, sampler::S; options=Options()) where {Tx, S<:AbstractSampler}
 
-    state = InitState(sampler, x);
-
+    state = InitState!(x, sampler);
     for i = 1:options.n_iters
         UpdateState!(state, sampler);
     end
-    @. x = state.x
-
     x
 end
 
@@ -15,7 +12,7 @@ function sample_trajectory(initial_x::Tx, sampler::S; options=Options()) where {
 
     n_accept = Int(0);
 
-    state = InitState(sampler, initial_x);
+    state = InitState(initial_x, sampler);
 
     # allocate memory for samples
     if(options.save_trajectory)

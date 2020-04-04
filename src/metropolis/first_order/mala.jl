@@ -38,8 +38,17 @@ function MALA_likelihood(X₀, X₁, gradV0, β, Δt)
     return exp( -β * (norminc2) / (4*Δt) );
 end
 
+function InitState!(initial_x::Tx, sampler::MALA) where Tx
 
-function InitState(sampler::MALA, initial_x::Tx) where Tx
+    V = sampler.V(initial_x);
+    ∇V = copy(initial_x);
+    sampler.∇V!(∇V, initial_x);
+    return MALAState(initial_x, copy(initial_x),
+        V, V, copy(∇V), copy(∇V), Int(0));
+end
+
+
+function InitState(initial_x::Tx, sampler::MALA) where Tx
 
     V = sampler.V(initial_x);
     ∇V = copy(initial_x);

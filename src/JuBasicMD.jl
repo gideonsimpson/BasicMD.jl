@@ -2,8 +2,6 @@ module JuBasicMD
 
 using LinearAlgebra
 
-
-
 """
     Boltzmann_likelihood(x, V, β)
 
