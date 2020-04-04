@@ -7,7 +7,7 @@ using ForwardDiff
 
 push!(LOAD_PATH,"../src/")
 
-using JuBasicMD: MALA, MALA!
+using JuBasicMD
 
 β = 0.1;
 x₀ = [-0.75, 1.5];
@@ -35,18 +35,20 @@ gradV! = (gradV, x)-> ForwardDiff.gradient!(gradV, V, x, cfg);
 
 Random.seed!(100);
 X₀ = copy(x₀);
-MALA!(X₀, V, gradV!, β, Δt, n_iters);
+sampler = MALA(V, gradV!, β, Δt);
+sample_trajectory!(X₀, sampler, options=Options(n_iters=n_iters));
 @printf("In Place X after %d iterations: (%g, %g)\n",n_iters, X₀[1], X₀[2])
 
 Random.seed!(100);
-X, a = MALA(x₀, V,gradV!, β, Δt, n_iters, return_trajectory=false);
+X, a = sample_trajectory(x₀, sampler, options=Options(n_iters=n_iters,save_trajectory=false));
 @printf("X after %d iterations: (%g, %g)\n",n_iters, X[1], X[2])
 @printf("Mean acceptance rate after %d iterations: %g\n",n_iters, a)
 
 Random.seed!(100);
-Xvals, avals = MALA(x₀, V, gradV!, β, Δt, n_iters, return_trajectory=true);
+X_vals, a_vals = sample_trajectory(x₀, sampler, options=Options(n_iters=n_iters));
 
-histogram2d(Xvals[1,:], Xvals[2,:],normalize=true,color=:viridis)
+
+histogram2d([X[1] for X in X_vals], [X[2] for X in X_vals],normalize=true,color=:viridis)
 xlims!(-1.5,1.5)
 ylims!(-0.5, 2.0)
 xlabel!("x")
