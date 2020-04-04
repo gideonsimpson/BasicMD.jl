@@ -22,16 +22,14 @@ end
 
 Random.seed!(100);
 X₀ = copy(x₀);
-
 sampler = MALA(V, gradV!, β, Δt);
 sample_trajectory!(X₀, sampler, options=Options(n_iters=n_iters));
 @printf("In Place X after %d iterations: %g\n",n_iters, X₀[1])
-#
+
 Random.seed!(100);
 X, a = sample_trajectory(x₀, sampler, options=Options(n_iters=n_iters,save_trajectory=false));
 @printf("X after %d iterations: %g\n",n_iters, X[1])
 @printf("Mean acceptance rate after %d iterations: %g\n",n_iters, a)
-#
 
 Random.seed!(100);
 X_vals, a_vals = sample_trajectory(x₀, sampler, options=Options(n_iters=n_iters));

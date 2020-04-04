@@ -6,8 +6,7 @@ using LinearAlgebra
 using QuadGK
 
 push!(LOAD_PATH,"../src/")
-
-using JuBasicMD: MALA, MALA!
+using JuBasicMD
 
 β = 5.0;
 x₀ = [-1.0];
@@ -23,19 +22,20 @@ end
 
 Random.seed!(100);
 X₀ = copy(x₀);
-MALA!(X₀, V, gradV!, β, Δt, n_iters);
+sampler = MALA(V, gradV!, β, Δt);
+sample_trajectory!(X₀, sampler, options=Options(n_iters=n_iters));
 @printf("In Place X after %d iterations: %g\n",n_iters, X₀[1])
 
 Random.seed!(100);
-X, a = MALA(x₀, V,gradV!, β, Δt, n_iters, return_trajectory=false);
+X, a = sample_trajectory(x₀, sampler, options=Options(n_iters=n_iters,save_trajectory=false));
 @printf("X after %d iterations: %g\n",n_iters, X[1])
 @printf("Mean acceptance rate after %d iterations: %g\n",n_iters, a)
 
 Random.seed!(100);
-Xvals,avals =MALA(x₀, V,gradV!, β, Δt, n_iters);
+X_vals, a_vals = sample_trajectory(x₀, sampler, options=Options(n_iters=n_iters));
 Z = quadgk(x->exp(-β*V(x)),-Inf,Inf)[1]
 qq = LinRange(-2,2,401)
-histogram(Xvals[:],label="Samples",normalize=true)
+histogram([X[1] for X in X_vals],label="Samples",normalize=true)
 qq=LinRange(-2,2,200)
 plot!(qq, exp.(-β*V.(qq))/Z,label="Density")
 xlabel!("x")
