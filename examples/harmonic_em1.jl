@@ -20,9 +20,11 @@ function gradV!(gradV, X)
     gradV;
 end
 
+sampler = EM(gradV!, β, Δt);
+
+
 Random.seed!(100);
 X₀ = copy(x₀);
-sampler = EM(gradV!, β, Δt);
 sample_trajectory!(X₀, sampler, options=Options(n_iters=n_iters));
 @printf("In Place X after %d iterations: %g\n",n_iters, X₀[1])
 

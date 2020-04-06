@@ -1,13 +1,13 @@
-struct EM <: FirstOrderNonMetropolisSampler
-    ∇V!
-    β::AbstractFloat
-    Δt::AbstractFloat
-    gaussian_coeff::AbstractFloat
+struct EM{TGV, TF<:AbstractFloat} <: FirstOrderNonMetropolisSampler
+    ∇V!::TGV
+    β::TF
+    Δt::TF
+    σ::TF
 end
 
-function EM(∇V!, β, Δt)
-    gaussian_coeff = sqrt(2 * Δt /β)
-    return EM(∇V!, β, Δt, gaussian_coeff)
+function EM(∇V!::TGV, β::TF, Δt::TF) where{TGV, TF<:AbstractFloat}
+    σ = sqrt(2 * Δt /β);
+    return EM(∇V!, β, Δt, σ)
 end
 
 mutable struct EMState{Tx} <:FirstOrderNonMetropolisSamplerState
@@ -15,23 +15,23 @@ mutable struct EMState{Tx} <:FirstOrderNonMetropolisSamplerState
     ∇V::Tx
 end
 
-function InitState!(initial_x::Tx, sampler::EM) where Tx
+function InitState!(x₀, sampler::EM) where Tx
 
-    ∇V = copy(initial_x);
-    sampler.∇V!(∇V, initial_x);
-    return EMState(initial_x, copy(∇V));
+    ∇V = copy(x₀);
+    sampler.∇V!(∇V, x₀);
+    return EMState(x₀, copy(∇V));
 end
 
-function InitState(initial_x::Tx, sampler::EM) where Tx
+function InitState(x₀, sampler::EM)
 
-    ∇V = copy(initial_x);
-    sampler.∇V!(∇V, initial_x);
-    return EMState(copy(initial_x), copy(∇V));
+    ∇V = copy(x₀);
+    sampler.∇V!(∇V, x₀);
+    return EMState(copy(x₀), copy(∇V));
 end
 
-function UpdateState!(state::EMState{Tx}, sampler::EM) where Tx
+function UpdateState!(state::EMState, sampler::EM)
 
-    @. state.x = state.x - sampler.Δt * state.∇V + sampler.gaussian_coeff * randn();
+    @. state.x = state.x - sampler.Δt * state.∇V + sampler.σ * randn();
     sampler.∇V!(state.∇V, state.x);
 
     state
