@@ -7,7 +7,7 @@ using QuadGK
 
 push!(LOAD_PATH,"../src/")
 
-using JuBasicMD: BBK, BBK!
+using JuBasicMD
 
 β = 5.0;
 γ = 1.5;
@@ -17,27 +17,33 @@ p₀ = [0.0];
 Δt = 1e-1;
 n_iters = 10^4;
 
-V = X -> (X⋅X-1)^2;
+function V(X)
+    return (X[1]^2 -1)^2
+end
+
 function gradV!(gradV, X)
     @. gradV = 4 * X * (X^2 -1);
     gradV;
 end
 
+sampler = BBK(gradV!, β, γ, M, Δt)
 
 Random.seed!(100);
 Q₀ = copy(q₀);
 P₀ = copy(p₀);
-BBK!(Q₀, P₀, gradV!, β, γ, M, Δt, n_iters);
-@printf("In Place Q after %d iterations: %g\n",n_iters, Q₀[1])
+sample_trajectory!([Q₀, P₀], sampler, options=Options(n_iters=n_iters));
+@printf("In Place (Q,P) after %d iterations: (%g,%g)\n",n_iters, Q₀[1], P₀[1]);
 
 Random.seed!(100);
-Q, P = BBK(q₀, p₀, gradV!, β, γ, M, Δt, n_iters, return_trajectory=false);
-@printf("Q after %d iterations: %g\n",n_iters, Q[1])
+Xvals = sample_trajectory([q₀, p₀], sampler, options=Options(n_iters=n_iters,n_save_iters=n_iters));
+Q = Xvals[end][1][1]
+P = Xvals[end][2][1]
+@printf("(Q,P) after %d iterations: (%g,%g)\n",n_iters, Q[1], P[1]);
 
 Random.seed!(100);
-Qvals, Pvals = BBK(q₀, p₀, gradV!, β, γ, M, Δt, n_iters);
+Xvals = sample_trajectory([q₀, p₀], sampler, options=Options(n_iters=n_iters));
 
-histogram(Qvals[:],label="Samples",normalize=true)
+histogram([X[1][1] for X in Xvals],label="Samples",normalize=true)
 Z = quadgk(x->exp(-β*V(x)),-Inf,Inf)[1]
 qq = LinRange(-2,2,401)
 plot!(qq, exp.(-β*V.(qq))/Z,label="Density")
