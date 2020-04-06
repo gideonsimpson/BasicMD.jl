@@ -1,38 +1,39 @@
-struct RWM <: ZerothOrderMetropolisSampler
-    V
-    β::AbstractFloat
-    Δt::AbstractFloat
-    gaussian_coeff::AbstractFloat
+struct RWM{TV, TF<:AbstractFloat} <: ZerothOrderMetropolisSampler
+    V::TV
+    β::TF
+    Δt::TF
+    σ::TF
 end
 
-function RWM(V, β, Δt)
-    gaussian_coeff = sqrt(2 * Δt /β)
-    return RWM(V, β, Δt, gaussian_coeff)
+function RWM(V::TV, β::TF, Δt::TF) where{TV, TF<:AbstractFloat}
+    σ = sqrt(2 * Δt /β);
+    return RWM(V, β, Δt, σ)
 end
 
-mutable struct RWMState{Tx} <:FirstOrderMetropolisSamplerState
+mutable struct RWMState{TF<:AbstractFloat, Tx} <:FirstOrderMetropolisSamplerState
     x::Tx
     x_previous::Tx
-    V::AbstractFloat
-    V_previous::AbstractFloat
+    V::TF
+    V_previous::TF
     accept::Int
 end
 
-function InitState!(initial_x::Tx, sampler::RWM) where Tx
+# function InitState!(x₀::Tx, sampler::RWM{TV, TF}) where {TS, Tx<:AbstractVector{TS},TV, TF<:AbstractFloat}
+function InitState!(x₀, sampler::RWM)
 
-    V = sampler.V(initial_x);
-    return RWMState(initial_x, copy(initial_x), V, V, Int(0));
+    V = sampler.V(x₀);
+    return RWMState(x₀, copy(x₀), V, V, Int(0));
 end
 
-function InitState(initial_x::Tx, sampler::RWM) where Tx
+function InitState(x₀, sampler::RWM)
 
-    V = sampler.V(initial_x);
-    return RWMState(copy(initial_x), copy(initial_x), V, V, Int(0));
+    V = sampler.V(x₀);
+    return RWMState(copy(x₀), copy(x₀), V, V, Int(0));
 end
 
-function UpdateState!(state::RWMState{Tx}, sampler::RWM) where Tx
-
-    @. state.x = state.x_previous +  sampler.gaussian_coeff * randn();
+# function UpdateState!(state::RWMState{TF,TS,Tx}, sampler::RWM{TV, TF}) where {TF<:AbstractFloat, TS, Tx<:AbstractVector{TS}, TV}
+function UpdateState!(state::RWMState, sampler::RWM)
+    @. state.x = state.x_previous +  sampler.σ * randn();
     state.V = sampler.V(state.x);
     a = min(1, exp(sampler.β*(state.V_previous-state.V)))
 
