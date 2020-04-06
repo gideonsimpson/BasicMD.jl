@@ -6,7 +6,7 @@ using LinearAlgebra
 
 push!(LOAD_PATH,"../src/")
 
-using JuBasicMD: HMC
+using JuBasicMD
 
 β = 5.0;
 x₀ = [0.0];
@@ -16,21 +16,32 @@ seed = 100;
 n_iters = 10^4;
 nΔt = 10;
 
-V = X -> 0.5 * X⋅X;
+function V(X)
+    return 0.5 * X[1]^2
+end
+
 function gradV!(gradV, X)
     @. gradV = X;
     gradV;
 end
 
+sampler = HMC(V, gradV!, β, M, Δt, nΔt);
 
 Random.seed!(100);
-X, a = HMC(x₀, V, gradV!, β, M, Δt, n_iters,nΔt, return_trajectory=false);
+X₀ = copy(x₀);
+sample_trajectory!(X₀, sampler, options=Options(n_iters=n_iters));
+@printf("In Place X after %d iterations: %g\n",n_iters, X₀[1])
+
+Random.seed!(100);
+Xvals, avals = sample_trajectory(x₀, sampler, options=Options(n_iters=n_iters,n_save_iters=n_iters));
+X = Xvals[end];
+a = avals[end];
 @printf("X after %d iterations: %g\n",n_iters, X[1])
 @printf("Mean acceptance rate after %d iterations: %g\n",n_iters, a)
 
 Random.seed!(100);
-Xvals,avals =HMC(x₀, V, gradV!, β, M, Δt, n_iters,nΔt, return_trajectory=true);
-histogram(Xvals[:],label="Samples",normalize=true)
+Xvals, avals = sample_trajectory(x₀, sampler, options=Options(n_iters=n_iters));
+histogram([X[1] for X in Xvals],label="Samples",normalize=true)
 qq=LinRange(-2,2,200)
 plot!(qq, sqrt((β)/(2*π))*exp.(-0.5 * β * qq.^2),label="Density")
 xlabel!("x")

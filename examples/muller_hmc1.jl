@@ -4,10 +4,11 @@ using Printf
 using Random
 using LinearAlgebra
 using ForwardDiff
+using StaticArrays
 
 push!(LOAD_PATH,"../src/")
 
-using JuBasicMD: HMC
+using JuBasicMD
 
 β = 0.1;
 M = [1.5, 0.75];
@@ -18,12 +19,12 @@ nΔt = 10^2;
 
 function V(x)
 
-    aa = Float64[-1, -1, -6.5, 0.7];
-    bb = Float64[0., 0., 11., 0.6];
-    cc = Float64[-10., -10., -6.5, 0.7];
-    AA = Float64[-200., -100., -170., 15.];
-    XX = Float64[1., 0., -0.5, -1.];
-    YY = Float64[0., 0.5, 1.5, 1.];
+    aa = @SVector [-1, -1, -6.5, 0.7];
+    bb = @SVector [0., 0., 11., 0.6];
+    cc = @SVector [-10., -10., -6.5, 0.7];
+    AA = @SVector [-200., -100., -170., 15.];
+    XX = @SVector [1., 0., -0.5, -1.];
+    YY = @SVector [0., 0.5, 1.5, 1.];
 
     return ( AA[1]*exp(aa[1]*(x[1]-XX[1])^2+bb[1]*(x[1]-XX[1])*(x[2]-YY[1])+cc[1]*(x[2]-YY[1])^2)
                  +AA[2]*exp(aa[2]*(x[1]-XX[2])^2+bb[2]*(x[1]-XX[2])*(x[2]-YY[2])+cc[2]*(x[2]-YY[2])^2)
@@ -34,9 +35,25 @@ end
 cfg = ForwardDiff.GradientConfig(V, x₀);
 gradV! = (gradV, x)-> ForwardDiff.gradient!(gradV, V, x, cfg);
 
+sampler = HMC(V, gradV!, β, M, Δt, nΔt);
+
+
 Random.seed!(100);
-Xvals, avals = HMC(x₀, V, gradV!, β, M, Δt, nΔt, n_iters, return_trajectory=true);
-histogram2d(Xvals[1,:], Xvals[2,:],normalize=true,color=:viridis)
+X₀ = copy(x₀);
+sample_trajectory!(X₀, sampler, options=Options(n_iters=n_iters));
+@printf("In Place X after %d iterations: (%g, %g)\n",n_iters, X₀[1], X₀[2])
+
+Random.seed!(100);
+Xvals, avals = sample_trajectory(x₀, sampler, options=Options(n_iters=n_iters,n_save_iters=n_iters));
+X = Xvals[end];
+a = avals[end];
+@printf("X after %d iterations: (%g, %g)\n",n_iters, X[1], X[2])
+@printf("Mean acceptance rate after %d iterations: %g\n",n_iters, a)
+
+Random.seed!(100);
+X_vals, a_vals = sample_trajectory(x₀, sampler, options=Options(n_iters=n_iters));
+
+histogram2d([X[1] for X in X_vals], [X[2] for X in X_vals],normalize=true,color=:viridis)
 xlims!(-1.5,1.5)
 ylims!(-0.5, 2.0)
 xlabel!("x")

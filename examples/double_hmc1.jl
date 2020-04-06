@@ -7,7 +7,7 @@ using QuadGK
 
 push!(LOAD_PATH,"../src/")
 
-using JuBasicMD: HMC
+using JuBasicMD
 
 β = 5.0;
 x₀ = [-1.0];
@@ -17,25 +17,35 @@ seed = 100;
 n_iters = 10^4; # number of samples
 nΔt = 10^4; # number of Verlet steps per HMC iteration
 
-V = X -> (X⋅X-1)^2;
+function V(X)
+    return (X[1]^2 -1)^2
+end
+
 function gradV!(gradV, X)
     @. gradV = 4 * X * (X^2 -1);
     gradV;
 end
 
+sampler = HMC(V, gradV!, β, M, Δt, nΔt);
 
 Random.seed!(100);
-X, a = HMC(x₀, V, gradV!, β, M, Δt, n_iters,nΔt, return_trajectory=false);
+X₀ = copy(x₀);
+sample_trajectory!(X₀, sampler, options=Options(n_iters=n_iters));
+@printf("In Place X after %d iterations: %g\n",n_iters, X₀[1])
+
+Random.seed!(100);
+Xvals, avals = sample_trajectory(x₀, sampler, options=Options(n_iters=n_iters,n_save_iters=n_iters));
+X = Xvals[end];
+a = avals[end];
 @printf("X after %d iterations: %g\n",n_iters, X[1])
 @printf("Mean acceptance rate after %d iterations: %g\n",n_iters, a)
 
 Random.seed!(100);
-Xvals,avals =HMC(x₀, V, gradV!, β, M, Δt, n_iters,nΔt, return_trajectory=true);
+Xvals, avals = sample_trajectory(x₀, sampler, options=Options(n_iters=n_iters));
 
 Z = quadgk(x->exp(-β*V(x)),-Inf,Inf)[1]
 qq = LinRange(-2,2,401)
-histogram(Xvals[:],label="Samples",normalize=true)
-qq=LinRange(-2,2,200)
+histogram([X[1] for X in Xvals],label="Samples",normalize=true)
 plot!(qq, exp.(-β*V.(qq))/Z,label="Density")
 xlabel!("x")
 ylabel!("Frequency")
