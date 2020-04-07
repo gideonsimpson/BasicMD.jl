@@ -3,10 +3,13 @@ using Plots
 using Printf
 using Random
 using LinearAlgebra
+using ForwardDiff
 
 push!(LOAD_PATH,"../src/")
 
 using JuBasicMD
+
+include("potentials.jl")
 
 β = 5.0;
 x₀ = [0.0];
@@ -14,14 +17,9 @@ seed = 100;
 Δt = 1e-1;
 n_iters = 10^4;
 
-function V(X)
-    return 0.5 * X[1]^2
-end
-
-function gradV!(gradV, X)
-    @. gradV = X;
-    gradV;
-end
+V = x->Harmonic(x);
+cfg = ForwardDiff.GradientConfig(V, x₀);
+gradV! = (gradV, x)-> ForwardDiff.gradient!(gradV, V, x, cfg);
 
 sampler = MALA(V, gradV!, β, Δt);
 

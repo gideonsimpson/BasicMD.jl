@@ -8,16 +8,15 @@ push!(LOAD_PATH,"../src/")
 
 using JuBasicMD
 
+include("potentials.jl")
+
 β = 5.0;
 x₀ = [0.0];
 seed = 100;
 Δt = 1e-1;
 n_iters = 10^4;
 
-# V = X -> 0.5 * X⋅X;
-function V(X)
-    return 0.5 * X[1]^2
-end
+V = x->Harmonic(x);
 
 sampler = RWM(V, β, Δt);
 
