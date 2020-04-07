@@ -1,3 +1,18 @@
+# sampling functions
+
+"""
+    sample_trajectory!(x, sampler; options=Options())
+
+In place applciation of the `sampler` to `x`.  Number of iterations are
+set using the `options` argument.
+
+### Fields
+
+* x         - Starting position for sampler, modified in place
+* sampler   - Desired sampler
+* options   - Sampling options, including number of iteration
+
+"""
 function sample_trajectory!(x::Tx, sampler::S; options=Options()) where {Tx, S<:AbstractSampler}
 
     state = InitState!(x, sampler);
@@ -7,6 +22,21 @@ function sample_trajectory!(x::Tx, sampler::S; options=Options()) where {Tx, S<:
     x
 end
 
+"""
+    sample_trajectory(x₀, sampler; options=Options())
+
+Run the `sampler` starting at `x₀`.  Number of iterations and interval between
+saves are set using the `options` argument.  For Metropolis samplers, the
+running acceptance rates are also resturned.
+
+
+### Fields
+
+* x         - Starting position for sampler, modified in place
+* sampler   - Desired sampler
+* options   - Sampling options, including number of iteration
+
+"""
 function sample_trajectory(x₀::Tx, sampler::S; options=Options()) where {Tx,  S<:MetropolisSampler}
 
     n_accept = Int(0);

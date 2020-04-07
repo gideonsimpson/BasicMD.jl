@@ -13,7 +13,9 @@ development.  Larger problems will best be handled with
 [LAMMPS](https://lammps.sandia.gov/) or [OpenMM](http://openmm.org/)
 
 # Overview
-This module has been significantly reorganized to better take advantage of multiple dispatch.  
+This module has been significantly reorganized to better take advantage of
+multiple dispatch.  The older versions are still available in `deprecated.jl` as a part of the module `OldJuBasicMD`, if needed.
+
 ## Sampling
 Each sampler is first initialized as
 ```
