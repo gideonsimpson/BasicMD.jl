@@ -5,6 +5,17 @@ struct RWM{TV, TF<:AbstractFloat} <: ZerothOrderMetropolisSampler
     σ::TF
 end
 
+"""
+    RWM(V, β, Δt)
+
+Set up the RWM sampler for Boltzmann.
+
+### Fields
+
+* V     - Potential
+* β     - Inverse temperature
+* Δt    - Time step
+"""
 function RWM(V::TV, β::TF, Δt::TF) where{TV, TF<:AbstractFloat}
     σ = sqrt(2 * Δt /β);
     return RWM(V, β, Δt, σ)

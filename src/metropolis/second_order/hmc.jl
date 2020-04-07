@@ -9,7 +9,19 @@ struct HMC{TV, TGV, TF<:AbstractFloat, TM} <: SecondOrderMetropolisSampler
     sqrtβ::TF
 end
 
+"""
+    HMC(V, ∇V!, β, M, Δt, nΔt)
 
+Set up the HMC sampler for Boltzmann.
+
+### Fields
+
+* V     - Potential
+* ∇V!   - In place gradient of the potential
+* β     - Inverse temperature
+* Δt    - Time step
+* nΔt   - Number of time steps to use in each Verlet run
+"""
 function HMC(V::TV, ∇V!::TGV, β::TF, M::TM, Δt::TF, nΔt::Int) where {TV, TGV, TF<:AbstractFloat,TM}
     sqrtM = sqrt.(M);
     sqrtβ = sqrt(β);

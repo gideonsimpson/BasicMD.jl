@@ -6,6 +6,18 @@ struct MALA{TV, TGV, TF<:AbstractFloat} <: FirstOrderMetropolisSampler
     σ::TF
 end
 
+"""
+    MALA(V, ∇V!, β, Δt)
+
+Set up the MALA sampler for overdamped Langevin.
+
+### Fields
+
+* V     - Potential
+* ∇V!   - In place gradient of the potential
+* β     - Inverse temperature
+* Δt    - Time step
+"""
 function MALA(V::TV,∇V!::TGV, β::TF, Δt::TF) where{TV, TGV, TF<:AbstractFloat}
     σ = sqrt(2 * Δt /β)
     return MALA(V, ∇V!, β, Δt, σ)

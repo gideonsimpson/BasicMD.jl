@@ -1,3 +1,5 @@
+# Sampler and sampler state types 
+
 abstract type AbstractSampler end
 abstract type MetropolisSampler <: AbstractSampler end
 abstract type NonMetropolisSampler <: AbstractSampler end
@@ -21,14 +23,3 @@ abstract type SecondOrderMetropolisSamplerState <: MetropolisSamplerState end
 abstract type ZerothOrderNonMetropolisSamplerState <: NonMetropolisSamplerState end
 abstract type FirstOrderNonMetropolisSamplerState <: NonMetropolisSamplerState end
 abstract type SecondOrderNonMetropolisSamplerState <: NonMetropolisSamplerState end
-
-struct Options
-        n_iters::Int
-        n_save_iters::Int
-        n_save::Int
-end
-
-function Options(;n_iters = 10^4, n_save_iters=1)
-
-        return Options(n_iters, n_save_iters, floor(Int,n_iters/n_save_iters))
-end

@@ -7,6 +7,19 @@ struct BBK{TGV, TF<:AbstractFloat, TM} <: SecondOrderNonMetropolisSampler
     σ::TF
 end
 
+"""
+    BBK(∇V!, β, γ, M, Δt)
+
+Set up the BBK integrator for inertial Langevin.
+
+### Fields
+
+* ∇V!   - In place gradient of the potential
+* β     - Inverse temperature
+* γ     - Damping Coefficient
+* M     - Mass (either scalar or vector)
+* Δt    - Time step
+"""
 function BBK(∇V!::TGV, β::TF, γ::TF, M::TM, Δt::TF) where {TGV, TF<:AbstractFloat,TM}
     σ = sqrt(γ * Δt / β);
     return BBK(∇V!, β, γ, M, Δt, σ)

@@ -1,18 +1,41 @@
+"""
+# JuBasicMD.jl
+
+A collection of basic routines for Molecular Dynamics simulations written in
+Julia.  These include:
+* Euler–Maruyama (EM)
+* Random Walk Metropolis (RWM)
+* Metropolis Adjusted Langevin (MALA)
+* Brünger, Brooks and Karplus (BBK)
+* ABOBA, BAOAB
+* Verlet
+* Hamiltonian/Hybrid Monte Carlo (HMC)
+
+## REPL help
+`?` followed by an sampler name (`?RWM`)to obtain infromation about individual
+samplers.  Use `?` on `sample_trajectory!` and `sample_trajectory` to obtain
+information about running the samplers.  Finally, `?` on `Options` will provide
+information about how to set additional options, such as the number of
+information.
+
+## Performing Sampling
+
+Having constructed a `sampler` structure, samplers are executed with the the
+commands
+```
+sample_trajectory!(X, sampler, options=opts);
+```
+for an in place transformation of `X` or
+```
+Xvals = sample_trajectory(X₀, sampler);
+```
+to obtain a full trajectory.  Metropolis methods will also return the running
+acceptance rate.
+
+"""
 module JuBasicMD
 
 using LinearAlgebra
-using Printf
-
-"""
-    Boltzmann_likelihood(x, V, β)
-
-Compute the unnormalized Boltzmann density, exp(-β V(x))
-for potential V at inverse temperature β
-"""
-function Boltzmann_likelihood(x, V, β)
-    w = exp(-β * V(x));
-    return w
-end
 
 export sample_trajectory, sample_trajectory!,
     Options,
@@ -20,6 +43,7 @@ export sample_trajectory, sample_trajectory!,
 
 include("types.jl")
 include("sample.jl")
+include("utils.jl")
 # RWM methods
 include("metropolis/zeroth_order/rwm.jl")
 # MALA methods

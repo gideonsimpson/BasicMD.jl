@@ -4,6 +4,17 @@ struct Verlet{TGV, TF<:AbstractFloat, TM} <: SecondOrderNonMetropolisSampler
     Δt::TF
 end
 
+"""
+    Veret(∇V!, M, Δt)
+
+Set up the Verlet integrator.
+
+### Fields
+
+* ∇V!   - In place gradient of the potential
+* M     - Mass (either scalar or vector)
+* Δt    - Time step
+"""
 function Veret(∇V!::TGV, M::TM, Δt::TF) where {TGV, TF<:AbstractFloat,TM}
     return Verlet(∇V!,M, Δt);
 end
@@ -28,9 +39,7 @@ end
 
 function UpdateState!(state::VerletState, sampler::Verlet)
     @. state.p_mid = state.p - 0.5 * sampler.Δt * state.∇V;
-    # @printf("k = %d: Pmid = %g\n",k, p_mid[1])
     @. state.x = state.x + sampler.Δt * state.p_mid/sampler.M;
-    # @printf("k = %d: Qnew = %g\n",k, state.x_proposal[1])
     sampler.∇V!(state.∇V, state.x);
     @. state.p = state.p_mid - 0.5 * sampler.Δt * state.∇V;
     state

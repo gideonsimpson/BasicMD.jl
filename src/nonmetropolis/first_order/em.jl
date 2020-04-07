@@ -5,6 +5,17 @@ struct EM{TGV, TF<:AbstractFloat} <: FirstOrderNonMetropolisSampler
     σ::TF
 end
 
+"""
+    EM(∇V!, β, γ, M, Δt)
+
+Set up the EM integrator for overdamped Langevin.
+
+### Fields
+
+* ∇V!   - In place gradient of the potential
+* β     - Inverse temperature
+* Δt    - Time step
+"""
 function EM(∇V!::TGV, β::TF, Δt::TF) where{TGV, TF<:AbstractFloat}
     σ = sqrt(2 * Δt /β);
     return EM(∇V!, β, Δt, σ)

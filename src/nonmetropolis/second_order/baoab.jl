@@ -10,10 +10,17 @@ struct BAOAB{TGV, TF<:AbstractFloat, TM} <: SecondOrderNonMetropolisSampler
 end
 
 """
-    BAOAB(q₀,p₀, gradV!, β, γ, M, Δt, n_iters, return_trajectory=true)
+    BAOAB(∇V!, β, γ, M, Δt)
 
-Run the BAOAB integrator for interial Langevin.  If `return_trajectory=true`,
-then the entire time series is returned.
+Set up the BAOAB integrator for inertial Langevin.
+
+### Fields
+
+* ∇V!   - In place gradient of the potential
+* β     - Inverse temperature
+* γ     - Damping Coefficient
+* M     - Mass (either scalar or vector)
+* Δt    - Time step
 """
 function BAOAB(∇V!::TGV, β::TF, γ::TF, M::TM, Δt::TF) where {TGV, TF<:AbstractFloat,TM}
 
