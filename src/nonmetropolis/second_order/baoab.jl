@@ -34,14 +34,14 @@ end
 function InitState!(x₀, sampler::BAOAB)
     ∇V = similar(x₀[1]);
     sampler.∇V!(∇V, x₀[1]);
-    return BAOABState(x₀, similar(x₀[1]), similar(x₀[1]),similar(x₀[1]), deepcopy(∇V));
+    return BAOABState(x₀, similar(x₀[1]), similar(x₀[1]),similar(x₀[1]), copy(∇V));
 end
 
 function InitState(x₀, sampler::BAOAB)
 
     ∇V = similar(x₀[1]);
     sampler.∇V!(∇V, x₀[1]);
-    return BAOABState(deepcopy(x₀), similar(x₀[1]), similar(x₀[1]),similar(x₀[1]), deepcopy(∇V));
+    return BAOABState(deepcopy(x₀), similar(x₀[1]), similar(x₀[1]),similar(x₀[1]), copy(∇V));
 end
 
 function UpdateState!(state::BAOABState, sampler::BAOAB)

@@ -17,16 +17,16 @@ end
 
 function InitState!(x₀, sampler::EM) where Tx
 
-    ∇V = copy(x₀);
+    ∇V = similar(x₀);
     sampler.∇V!(∇V, x₀);
     return EMState(x₀, copy(∇V));
 end
 
 function InitState(x₀, sampler::EM)
 
-    ∇V = copy(x₀);
+    ∇V = similar(x₀);
     sampler.∇V!(∇V, x₀);
-    return EMState(copy(x₀), copy(∇V));
+    return EMState(deepcopy(x₀), copy(∇V));
 end
 
 function UpdateState!(state::EMState, sampler::EM)

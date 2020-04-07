@@ -3,11 +3,13 @@ using Plots
 using Printf
 using Random
 using LinearAlgebra
+using ForwardDiff
 using QuadGK
 
 push!(LOAD_PATH,"../src/")
+using JuBasicMD
 
-using JuBasicMD: RWM, RWM!
+include("potentials.jl")
 
 β = 5.0;
 x₀ = [-1.0];
@@ -15,14 +17,7 @@ seed = 100;
 Δt = 1e-1;
 n_iters = 10^4; # number of samples
 
-function V(X)
-    return (X[1]^2 -1)^2
-end
-#
-# function gradV!(gradV, X)
-#     @. gradV = 4 * X * (X^2 -1);
-#     gradV;
-# end
+V = x->DoubleWell(x);
 
 sampler = RWM(V, β, Δt);
 
@@ -39,12 +34,10 @@ a = avals[end];
 @printf("Mean acceptance rate after %d iterations: %g\n",n_iters, a)
 
 Random.seed!(100);
-Xvals,avals =RWM(x₀, V, β, Δt, n_iters);
-
+Xvals, avals =sample_trajectory(x₀, sampler, options=Options(n_iters=n_iters));
+histogram([X[1] for X in Xvals],label="Samples",normalize=true)
 Z = quadgk(x->exp(-β*V(x)),-Inf,Inf)[1]
 qq = LinRange(-2,2,401)
-histogram(Xvals[:],label="Samples",normalize=true)
-qq=LinRange(-2,2,200)
 plot!(qq, exp.(-β*V.(qq))/Z,label="Density")
 xlabel!("x")
 ylabel!("Frequency")

@@ -3,11 +3,14 @@ using Plots
 using Printf
 using Random
 using LinearAlgebra
+using ForwardDiff
 using QuadGK
 
 push!(LOAD_PATH,"../src/")
 
 using JuBasicMD
+
+include("potentials.jl")
 
 β = 5.0;
 x₀ = [-1.0];
@@ -15,16 +18,11 @@ M = 1.0;
 seed = 100;
 Δt = 2e-1;
 n_iters = 10^4; # number of samples
-nΔt = 10^4; # number of Verlet steps per HMC iteration
+nΔt = 10^1; # number of Verlet steps per HMC iteration
 
-function V(X)
-    return (X[1]^2 -1)^2
-end
-
-function gradV!(gradV, X)
-    @. gradV = 4 * X * (X^2 -1);
-    gradV;
-end
+V = x->DoubleWell(x);
+cfg = ForwardDiff.GradientConfig(V, x₀);
+gradV! = (gradV, x)-> ForwardDiff.gradient!(gradV, V, x, cfg);
 
 sampler = HMC(V, gradV!, β, M, Δt, nΔt);
 

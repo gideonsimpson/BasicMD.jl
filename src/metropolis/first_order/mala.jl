@@ -13,11 +13,11 @@ end
 
 mutable struct MALAState{TF<:AbstractFloat, Tx} <:FirstOrderMetropolisSamplerState
     x::Tx
-    x_previous::Tx
+    x_proposal::Tx
     V::TF
-    V_previous::TF
+    V_proposal::TF
     ∇V::Tx
-    ∇V_previous::Tx
+    ∇V_proposal::Tx
     accept::Int
 end
 
@@ -40,7 +40,7 @@ end
 function InitState!(x₀, sampler::MALA)
 
     V = sampler.V(x₀);
-    ∇V = copy(x₀);
+    ∇V = similar(x₀);
     sampler.∇V!(∇V, x₀);
     return MALAState(x₀, copy(x₀),
         V, V, copy(∇V), copy(∇V), Int(0));
@@ -50,26 +50,26 @@ end
 function InitState(x₀, sampler::MALA)
 
     V = sampler.V(x₀);
-    ∇V = copy(x₀);
+    ∇V = similar(x₀);
     sampler.∇V!(∇V, x₀);
-    return MALAState(copy(x₀), copy(x₀),
-        V, V, copy(∇V), copy(∇V), Int(0));
+    return MALAState(deepcopy(x₀), similar(x₀),
+        V, V, copy(∇V), similar(∇V), Int(0));
 end
 
 function UpdateState!(state::MALAState, sampler::MALA)
 
-    @. state.x = state.x_previous - sampler.Δt * state.∇V_previous + sampler.σ * randn();
-    state.V = sampler.V(state.x);
-    sampler.∇V!(state.∇V,state.x);
-    g0 = MALA_likelihood(state.x_previous, state.x, state.∇V_previous, sampler.β, sampler.Δt);
-    gp = MALA_likelihood(state.x, state.x_previous, state.∇V, sampler.β, sampler.Δt);
+    @. state.x_proposal = state.x - sampler.Δt * state.∇V + sampler.σ * randn();
+    state.V_proposal = sampler.V(state.x_proposal);
+    sampler.∇V!(state.∇V_proposal, state.x_proposal);
+    g0 = MALA_likelihood(state.x, state.x_proposal, state.∇V, sampler.β, sampler.Δt);
+    gp = MALA_likelihood(state.x_proposal, state.x, state.∇V_proposal, sampler.β, sampler.Δt);
 
-    a = min(1, gp/g0 * exp(sampler.β*(state.V_previous-state.V)));
+    a = min(1, gp/g0 * exp(sampler.β*(state.V-state.V_proposal)));
 
     if rand()<a
-        @. state.x_previous = state.x;
-        @. state.∇V_previous = state.∇V;
-        state.V_previous = state.V;
+        @. state.x = state.x_proposal;
+        @. state.∇V = state.∇V_proposal;
+        state.V = state.V_proposal;
         state.accept = 1;
     else
         state.accept = 0;

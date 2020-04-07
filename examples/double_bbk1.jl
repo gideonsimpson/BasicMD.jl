@@ -3,11 +3,14 @@ using Plots
 using Printf
 using Random
 using LinearAlgebra
+using ForwardDiff
 using QuadGK
 
 push!(LOAD_PATH,"../src/")
 
 using JuBasicMD
+
+include("potentials.jl")
 
 β = 5.0;
 γ = 1.5;
@@ -17,16 +20,11 @@ p₀ = [0.0];
 Δt = 1e-1;
 n_iters = 10^4;
 
-function V(X)
-    return (X[1]^2 -1)^2
-end
+V = x->DoubleWell(x);
+cfg = ForwardDiff.GradientConfig(V, q₀);
+gradV! = (gradV, x)-> ForwardDiff.gradient!(gradV, V, x, cfg);
 
-function gradV!(gradV, X)
-    @. gradV = 4 * X * (X^2 -1);
-    gradV;
-end
-
-sampler = BBK(gradV!, β, γ, M, Δt)
+sampler = BBK(gradV!, β, γ, M, Δt);
 
 Random.seed!(100);
 Q₀ = copy(q₀);

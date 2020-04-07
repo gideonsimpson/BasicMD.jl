@@ -1,6 +1,7 @@
 module JuBasicMD
 
 using LinearAlgebra
+using Printf
 
 """
     Boltzmann_likelihood(x, V, β)
@@ -15,7 +16,7 @@ end
 
 export sample_trajectory, sample_trajectory!,
     Options,
-    RWM, MALA, EM, BBK, ABOBA, BAOAB, HMC
+    RWM, MALA, EM, BBK, ABOBA, BAOAB, HMC, Verlet
 
 include("types.jl")
 include("sample.jl")
@@ -33,4 +34,6 @@ include("nonmetropolis/second_order/aboba.jl")
 include("nonmetropolis/second_order/baoab.jl")
 # HMC methods
 include("metropolis/second_order/hmc.jl")
+# Verlet methods
+include("nonmetropolis/second_order/verlet.jl")
 end

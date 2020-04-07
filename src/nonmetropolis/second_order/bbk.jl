@@ -19,16 +19,16 @@ mutable struct BBKState{Tq, Tx<:AbstractVector{Tq}} <:SecondOrderNonMetropolisSa
 end
 
 function InitState!(x₀, sampler::BBK)
-    ∇V = deepcopy(x₀[1]);
+    ∇V = similar(x₀[1]);
     sampler.∇V!(∇V, x₀[1]);
-    return BBKState(x₀, deepcopy(x₀[1]), deepcopy(∇V));
+    return BBKState(x₀, similar(x₀[1]), copy(∇V));
 end
 
 function InitState(x₀, sampler::BBK)
 
     ∇V = deepcopy(x₀[1]);
     sampler.∇V!(∇V, x₀[1]);
-    return BBKState(deepcopy(x₀), deepcopy(x₀[1]), deepcopy(∇V));
+    return BBKState(deepcopy(x₀), similar(x₀[1]), copy(∇V));
 end
 
 function UpdateState!(state::BBKState, sampler::BBK)
