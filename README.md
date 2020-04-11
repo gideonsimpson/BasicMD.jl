@@ -4,11 +4,12 @@ A collection of basic routines for Molecular Dynamics simulations written in Jul
 * Random Walk Metropolis (RWM)
 * Metropolis Adjusted Langevin (MALA)
 * Brünger, Brooks and Karplus (BBK)
+* Grønbech-Jensen and Farago (GJF)
 * ABOBA, BAOAB
 * Verlet
 * Hamiltonian/Hybrid Monte Carlo (HMC)
 
-This is intended to be simple collection for small scale problems and code
+This is intended to be a collection for small scale problems and code
 development.  Larger problems will best be handled with
 [LAMMPS](https://lammps.sandia.gov/) or [OpenMM](http://openmm.org/)
 
@@ -71,15 +72,17 @@ Example codes include:
 
 * BBK is currently implemented for a slightly different version of the Langevin SDE than ABOBA/BAOAB.  BBK requires inverting the mass matrix while ABOBA/BAOAB require its square root.
 
+* GJF is implemented in (q,p) coordinates as opposed to (x,v) coordinates.  Consequently, the mass term appears slightly differently than in the literature.
+
 Both will sample the associated Boltzmann distribution, but the SDE trajectories will differ when `M≂̸I`.
 
 # TO DO
 Before reaching a 1.0, the goals are:
 * Include GHMC samplers.  
-* Include G-JF integrator.
 * Include reporter functions that allow for the computation of observables on at particular time intervals.  
 
 # References
 
 1. [Free Energy Computations: A Mathematical Perspective by Lelièvre, Rousset, and Stoltz](https://www.worldscientific.com/worldscibooks/10.1142/P579)
 2. [Molecular Dynamics by Leimkuhler and Matthews](https://www.springer.com/gp/book/9783319163741)
+3. [A simple and effective Verlet-type algorithm for simulating Langevin dynamics by Grønbech-Jesnen and Farago](https://doi.org/10.1080/00268976.2012.760055)
