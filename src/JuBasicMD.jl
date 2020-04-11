@@ -39,7 +39,7 @@ using LinearAlgebra
 
 export sample_trajectory, sample_trajectory!,
     Options,
-    RWM, MALA, EM, BBK, ABOBA, BAOAB, HMC, Verlet
+    RWM, MALA, EM, BBK, ABOBA, BAOAB, HMC, Verlet, GJF
 
 include("types.jl")
 include("sample.jl")
@@ -60,4 +60,6 @@ include("nonmetropolis/second_order/baoab.jl")
 include("metropolis/second_order/hmc.jl")
 # Verlet methods
 include("nonmetropolis/second_order/verlet.jl")
+# G-JF methods
+include("nonmetropolis/second_order/g_jf.jl")
 end
