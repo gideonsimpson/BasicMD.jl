@@ -5,7 +5,7 @@ struct Verlet{TGV, TF<:AbstractFloat, TM} <: SecondOrderNonMetropolisSampler
 end
 
 """
-    Veret(∇V!, M, Δt)
+    Verlet(∇V!, M, Δt)
 
 Set up the Verlet integrator.
 
@@ -15,7 +15,7 @@ Set up the Verlet integrator.
 * M     - Mass (either scalar or vector)
 * Δt    - Time step
 """
-function Veret(∇V!::TGV, M::TM, Δt::TF) where {TGV, TF<:AbstractFloat,TM}
+function Verlet(∇V!::TGV, M::TM, Δt::TF) where {TGV, TF<:AbstractFloat,TM}
     return Verlet(∇V!,M, Δt);
 end
 
