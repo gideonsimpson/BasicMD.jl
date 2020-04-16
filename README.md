@@ -41,12 +41,12 @@ For Metropolis methods, the latter form also returns the running acceptance rate
 Xvals, avals = sample_trajectory(X₀, sampler);
 ```
 
-## Options
+## MDOptions
 The number of iterations performed is determined by the optional `options`
 argument.  This takes as its argument a data structure which is formatted using
-the `Options` function:
+the `MDOptions` function:
 ```
-opts = Options(n_iters=n_iters,n_save_iters=n_save_iters)
+opts = MDOptions(n_iters=n_iters,n_save_iters=n_save_iters)
 ```
 `n_iters` is the number of iterations performed by the sampler.  `n_save_iters`
 is the frequency with which samples are saved.    If n_save_iters=1, every

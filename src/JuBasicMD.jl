@@ -14,7 +14,7 @@ Julia.  These include:
 ## REPL help
 `?` followed by an sampler name (`?RWM`)to obtain infromation about individual
 samplers.  Use `?` on `sample_trajectory!` and `sample_trajectory` to obtain
-information about running the samplers.  Finally, `?` on `Options` will provide
+information about running the samplers.  Finally, `?` on `MDOptions` will provide
 information about how to set additional options, such as the number of
 information.
 
@@ -38,7 +38,7 @@ module JuBasicMD
 using LinearAlgebra
 
 export sample_trajectory, sample_trajectory!,
-    Options,
+    MDOptions,
     RWM, MALA, EM, BBK, ABOBA, BAOAB, HMC, Verlet, GJF
 
 include("types.jl")

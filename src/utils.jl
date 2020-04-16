@@ -1,11 +1,11 @@
-struct Options
+struct MDOptions
         n_iters::Int
         n_save_iters::Int
         n_save::Int
 end
 
 """
-    Options(;n_iters = 10^4, n_save_iters=1)
+    MDOptions(;n_iters = 10^4, n_save_iters=1)
 
 Set options for samplers.
 
@@ -16,9 +16,9 @@ Set options for samplers.
                   n_save_iters=1, every iteration is saved.  If n_save_iters=n_iters,
                   only the final iteration is saved.
 """
-function Options(;n_iters = 10^4, n_save_iters=1)
+function MDOptions(;n_iters = 10^4, n_save_iters=1)
 
-        return Options(n_iters, n_save_iters, floor(Int,n_iters/n_save_iters))
+        return MDOptions(n_iters, n_save_iters, floor(Int,n_iters/n_save_iters))
 end
 
 """

@@ -1,7 +1,7 @@
 # sampling functions
 
 """
-    sample_trajectory!(x, sampler; options=Options())
+    sample_trajectory!(x, sampler; options=MDOptions())
 
 In place applciation of the `sampler` to `x`.  Number of iterations are
 set using the `options` argument.
@@ -13,7 +13,7 @@ set using the `options` argument.
 * options   - Sampling options, including number of iteration
 
 """
-function sample_trajectory!(x::Tx, sampler::S; options=Options()) where {Tx, S<:AbstractSampler}
+function sample_trajectory!(x::Tx, sampler::S; options=MDOptions()) where {Tx, S<:AbstractSampler}
 
     state = InitState!(x, sampler);
     for _ in 1:options.n_iters
@@ -23,7 +23,7 @@ function sample_trajectory!(x::Tx, sampler::S; options=Options()) where {Tx, S<:
 end
 
 """
-    sample_trajectory(x₀, sampler; options=Options())
+    sample_trajectory(x₀, sampler; options=MDOptions())
 
 Run the `sampler` starting at `x₀`.  Number of iterations and interval between
 saves are set using the `options` argument.  For Metropolis samplers, the
@@ -37,7 +37,7 @@ running acceptance rates are also resturned.
 * options   - Sampling options, including number of iteration
 
 """
-function sample_trajectory(x₀::Tx, sampler::S; options=Options()) where {Tx,  S<:MetropolisSampler}
+function sample_trajectory(x₀::Tx, sampler::S; options=MDOptions()) where {Tx,  S<:MetropolisSampler}
 
     n_accept = Int(0);
 
@@ -60,7 +60,7 @@ function sample_trajectory(x₀::Tx, sampler::S; options=Options()) where {Tx,  
 end
 
 
-function sample_trajectory(x₀::Tx, sampler::S; options=Options()) where {Tx,  S<:NonMetropolisSampler}
+function sample_trajectory(x₀::Tx, sampler::S; options=MDOptions()) where {Tx,  S<:NonMetropolisSampler}
 
     state = InitState(x₀, sampler);
     samples = Tx[similar(x₀) for i = 1:options.n_save];

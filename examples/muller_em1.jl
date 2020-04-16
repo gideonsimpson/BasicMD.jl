@@ -25,16 +25,16 @@ sampler = EM(gradV!, β, Δt);
 
 Random.seed!(100);
 X₀ = copy(x₀);
-sample_trajectory!(X₀, sampler, options=Options(n_iters=n_iters));
+sample_trajectory!(X₀, sampler, options=MDOptions(n_iters=n_iters));
 @printf("In Place X after %d iterations: (%g, %g)\n",n_iters, X₀[1], X₀[2])
 
 Random.seed!(100);
-Xvals = sample_trajectory(x₀, sampler, options=Options(n_iters=n_iters,n_save_iters=n_iters));
+Xvals = sample_trajectory(x₀, sampler, options=MDOptions(n_iters=n_iters,n_save_iters=n_iters));
 X = Xvals[end];
 @printf("X after %d iterations: (%g, %g)\n",n_iters, X[1], X[2])
 
 Random.seed!(100);
-X_vals = sample_trajectory(x₀, sampler, options=Options(n_iters=n_iters));
+X_vals = sample_trajectory(x₀, sampler, options=MDOptions(n_iters=n_iters));
 histogram2d([X[1] for X in X_vals], [X[2] for X in X_vals],normalize=true,color=:viridis)
 xlims!(-1.5,1.5)
 ylims!(-0.5, 2.0)

@@ -25,18 +25,18 @@ sampler = MALA(V, gradV!, β, Δt);
 
 Random.seed!(100);
 X₀ = copy(x₀);
-sample_trajectory!(X₀, sampler, options=Options(n_iters=n_iters));
+sample_trajectory!(X₀, sampler, options=MDOptions(n_iters=n_iters));
 @printf("In Place X after %d iterations: (%g, %g)\n",n_iters, X₀[1], X₀[2])
 
 Random.seed!(100);
-Xvals, avals = sample_trajectory(x₀, sampler, options=Options(n_iters=n_iters,n_save_iters=n_iters));
+Xvals, avals = sample_trajectory(x₀, sampler, options=MDOptions(n_iters=n_iters,n_save_iters=n_iters));
 X = Xvals[end];
 a = avals[end];
 @printf("X after %d iterations: (%g, %g)\n",n_iters, X[1], X[2])
 @printf("Mean acceptance rate after %d iterations: %g\n",n_iters, a)
 
 Random.seed!(100);
-Xvals, avals = sample_trajectory(x₀, sampler, options=Options(n_iters=n_iters));
+Xvals, avals = sample_trajectory(x₀, sampler, options=MDOptions(n_iters=n_iters));
 
 histogram2d([X[1] for X in Xvals], [X[2] for X in Xvals],normalize=true,color=:viridis)
 xlims!(-1.5,1.5)
