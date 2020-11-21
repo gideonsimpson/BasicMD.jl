@@ -81,6 +81,10 @@ Before reaching a 1.0, the goals are:
 * Include GHMC samplers.  
 * Include reporter functions that allow for the computation of observables on at particular time intervals.  
 
+# Acknowledgements
+This work was supported in part by the US National Science Foundation Grant DMS-1818716.
+
+
 # References
 
 1. [Free Energy Computations: A Mathematical Perspective by Lelièvre, Rousset, and Stoltz](https://www.worldscientific.com/worldscibooks/10.1142/P579)
