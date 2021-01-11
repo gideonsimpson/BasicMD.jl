@@ -6,7 +6,6 @@ A collection of basic routines for Molecular Dynamics simulations written in Jul
 * Brünger, Brooks and Karplus (BBK)
 * Grønbech-Jensen and Farago (GJF)
 * ABOBA, BAOAB
-* Verlet
 * Hamiltonian/Hybrid Monte Carlo (HMC)
 
 This is intended to be a collection for small scale problems and code
@@ -78,6 +77,7 @@ Both will sample the associated Boltzmann distribution, but the SDE trajectories
 
 # TO DO
 Before reaching a 1.0, the goals are:
+* Fix the separate Verlet sampler (separate from HMC).
 * Include GHMC samplers.  
 * Include reporter functions that allow for the computation of observables on at particular time intervals.  
 
