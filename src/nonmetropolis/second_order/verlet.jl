@@ -16,7 +16,7 @@ Set up the Verlet integrator.
 * Δt    - Time step
 """
 function Verlet(∇V!::TGV, M::TM, Δt::TF) where {TGV, TF<:AbstractFloat,TM}
-    return Verlet(∇V!,M, Δt);
+    return Verlet(∇V!, M, Δt)
 end
 
 mutable struct VerletState{Tq, Tx<:AbstractVector{Tq}, TF<:AbstractFloat} <:SecondOrderNonMetropolisSamplerState
