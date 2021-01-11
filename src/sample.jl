@@ -52,7 +52,7 @@ function sample_trajectory(x₀::Tx, sampler::S; options=MDOptions()) where {Tx,
         n_accept+=state.accept;
         if(mod(i,options.n_save_iters)==0)
             @. samples[save_index] = deepcopy(state.x);
-            acceptance_rates[save_index] = n_accept/options.n_iters;
+            acceptance_rates[save_index] = n_accept/i;
             save_index+=1;
         end
     end
