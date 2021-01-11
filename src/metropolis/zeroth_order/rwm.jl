@@ -21,7 +21,7 @@ function RWM(V::TV, β::TF, Δt::TF) where{TV, TF<:AbstractFloat}
     return RWM(V, β, Δt, σ)
 end
 
-mutable struct RWMState{TF<:AbstractFloat, Tx} <:FirstOrderMetropolisSamplerState
+mutable struct RWMState{TF<:AbstractFloat, Tx} <:ZerothOrderMetropolisSamplerState
     x::Tx
     x_proposal::Tx
     V::TF
