@@ -16,6 +16,11 @@ development.  Larger problems will best be handled with
 This module has been significantly reorganized to better take advantage of
 multiple dispatch.  The older versions are still available in `deprecated.jl` as a part of the module `OldJuBasicMD`, if needed.
 
+This module has not (yet) been added to the package registry, but it can be
+added to an installation with the command:
+```
+(@v1.XYZ) pkg> add https://github.com/gideonsimpson/JuBasicMD
+```
 ## Sampling
 Each sampler is first initialized as
 ```
@@ -80,6 +85,7 @@ Before reaching a 1.0, the goals are:
 * Fix the separate Verlet sampler (separate from HMC).
 * Include GHMC samplers.  
 * Include reporter functions that allow for the computation of observables on at particular time intervals.  
+* Add to the package registry
 
 # Acknowledgements
 This work was supported in part by the US National Science Foundation Grant DMS-1818716.
