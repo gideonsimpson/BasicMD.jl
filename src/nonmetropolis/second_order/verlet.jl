@@ -1,9 +1,3 @@
-struct Verlet{TGV, TF<:AbstractFloat, TM} <: SecondOrderNonMetropolisSampler
-    ∇V!::TGV
-    M::TM
-    Δt::TF
-end
-
 """
     Verlet(∇V!, M, Δt)
 
@@ -15,8 +9,10 @@ Set up the Verlet integrator.
 * M     - Mass (either scalar or vector)
 * Δt    - Time step
 """
-function Verlet(∇V!::TGV, M::TM, Δt::TF) where {TGV, TF<:AbstractFloat,TM}
-    return Verlet(∇V!, M, Δt)
+struct Verlet{TGV, TF<:AbstractFloat, TM} <: SecondOrderNonMetropolisSampler
+    ∇V!::TGV
+    M::TM
+    Δt::TF
 end
 
 mutable struct VerletState{Tq, Tx<:AbstractVector{Tq}, TF<:AbstractFloat} <:SecondOrderNonMetropolisSamplerState

@@ -37,29 +37,38 @@ module JuBasicMD
 
 using LinearAlgebra
 
-export sample_trajectory, sample_trajectory!,
-    MDOptions,
-    RWM, MALA, EM, BBK, ABOBA, BAOAB, HMC, GJF
 
 include("types.jl")
 include("sample.jl")
 include("utils.jl")
+export sample_trajectory, sample_trajectory!,
+    MDOptions
+
 # RWM methods
 include("metropolis/zeroth_order/rwm.jl")
+export RWM
 # MALA methods
 include("metropolis/first_order/mala.jl")
+export MALA
 # EM methods
 include("nonmetropolis/first_order/em.jl")
+export EM
 # BBK methods
 include("nonmetropolis/second_order/bbk.jl")
+export BBK
 # ABOBA methods
 include("nonmetropolis/second_order/aboba.jl")
+export ABOBA
 # BAOAB methods
 include("nonmetropolis/second_order/baoab.jl")
+export BAOAB
 # HMC methods
 include("metropolis/second_order/hmc.jl")
+export HMC
 # G-JF methods
 include("nonmetropolis/second_order/g_jf.jl")
+export GJF
 # Verlet methods
-# include("nonmetropolis/second_order/verlet.jl")
+include("nonmetropolis/second_order/verlet.jl")
+export Verlet
 end
