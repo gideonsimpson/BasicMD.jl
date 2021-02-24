@@ -5,8 +5,6 @@ using Random
 using LinearAlgebra
 using ForwardDiff
 using QuadGK
-
-push!(LOAD_PATH,"../src/")
 using JuBasicMD
 
 include("potentials.jl")

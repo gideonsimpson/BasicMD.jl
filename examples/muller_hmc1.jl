@@ -4,9 +4,6 @@ using Printf
 using Random
 using LinearAlgebra
 using ForwardDiff
-
-push!(LOAD_PATH,"../src/")
-
 using JuBasicMD
 
 include("potentials.jl")

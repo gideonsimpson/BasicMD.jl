@@ -5,9 +5,6 @@ using Random
 using LinearAlgebra
 using ForwardDiff
 using StaticArrays
-
-push!(LOAD_PATH,"../src/")
-
 using JuBasicMD
 
 include("potentials.jl")

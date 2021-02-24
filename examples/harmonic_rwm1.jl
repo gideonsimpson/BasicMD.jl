@@ -3,9 +3,6 @@ using Plots
 using Printf
 using Random
 using LinearAlgebra
-
-push!(LOAD_PATH,"../src/")
-
 using JuBasicMD
 
 include("potentials.jl")
