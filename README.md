@@ -20,6 +20,10 @@ This module can be added with the command:
 ```
 (@v1.XYZ) pkg> add BasicMD
 ```
+
+This package was previously named `JuBasicMD`, but has since been renamed to
+conform with Julia package naming recommendations.
+
 ## Sampling
 Each sampler is first initialized as
 ```
