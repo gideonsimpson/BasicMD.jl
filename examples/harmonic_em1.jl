@@ -4,7 +4,7 @@ using Printf
 using Random
 using LinearAlgebra
 using ForwardDiff
-using JuBasicMD
+using BasicMD
 
 include("potentials.jl")
 

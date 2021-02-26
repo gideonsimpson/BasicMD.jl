@@ -3,7 +3,7 @@ using Plots
 using Printf
 using Random
 using LinearAlgebra
-using JuBasicMD
+using BasicMD
 
 include("potentials.jl")
 

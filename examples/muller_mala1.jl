@@ -5,7 +5,7 @@ using Random
 using LinearAlgebra
 using ForwardDiff
 using StaticArrays
-using JuBasicMD
+using BasicMD
 
 include("potentials.jl")
 

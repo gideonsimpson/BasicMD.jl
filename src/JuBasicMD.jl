@@ -1,5 +1,5 @@
 """
-# JuBasicMD.jl
+# BasicMD.jl
 
 A collection of basic routines for Molecular Dynamics simulations written in
 Julia.  These include:
@@ -33,7 +33,7 @@ to obtain a full trajectory.  Metropolis methods will also return the running
 acceptance rate.
 
 """
-module JuBasicMD
+module BasicMD
 
 using LinearAlgebra
 

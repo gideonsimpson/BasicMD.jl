@@ -1,6 +1,6 @@
 
 # deprecated formulation of the problem
-module OldJuBasicMD
+module OldBasicMD
 
 using LinearAlgebra
 

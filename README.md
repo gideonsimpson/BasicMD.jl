@@ -1,4 +1,4 @@
-# JuBasicMD
+# BasicMD
 A collection of basic routines for Molecular Dynamics simulations written in Julia.  These include
 * Euler–Maruyama (EM)
 * Random Walk Metropolis (RWM)
@@ -14,12 +14,12 @@ development.  Larger problems will best be handled with
 
 # Overview
 This module has been significantly reorganized to better take advantage of
-multiple dispatch.  The older versions are still available in `deprecated.jl` as a part of the module `OldJuBasicMD`, if needed.
+multiple dispatch.  The older versions are still available in `deprecated.jl` as a part of the module `OldBasicMD`, if needed.
 
 This module has not (yet) been added to the package registry, but it can be
 added to an installation with the command:
 ```
-(@v1.XYZ) pkg> add https://github.com/gideonsimpson/JuBasicMD
+(@v1.XYZ) pkg> add BasicMD
 ```
 ## Sampling
 Each sampler is first initialized as
@@ -66,7 +66,7 @@ Example codes include:
 * 1D Double Well Potential
 * 2D Muller Potential
 
-These examples assume that the active environment includes the `JuBasicMD` package.
+These examples assume that the active environment includes the `BasicMD` package.
 # Caveats
 * The code assumes that the state space is vector valued.  Thus, even if the problem is one dimensional, you should have initial points and functions formatted appropriately, i.e.
 ```

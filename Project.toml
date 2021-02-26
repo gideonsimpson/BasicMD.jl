@@ -1,4 +1,4 @@
-name = "JuBasicMD"
+name = "BasicMD"
 uuid = "f448d96e-cc9b-4179-976a-6795f3ef2db6"
 authors = ["Gideon Simpson <gideon.simpson@gmail.com>"]
 version = "0.1.0"
