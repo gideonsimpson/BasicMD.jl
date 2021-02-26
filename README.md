@@ -16,8 +16,7 @@ development.  Larger problems will best be handled with
 This module has been significantly reorganized to better take advantage of
 multiple dispatch.  The older versions are still available in `deprecated.jl` as a part of the module `OldBasicMD`, if needed.
 
-This module has not (yet) been added to the package registry, but it can be
-added to an installation with the command:
+This module can be added with the command:
 ```
 (@v1.XYZ) pkg> add BasicMD
 ```
