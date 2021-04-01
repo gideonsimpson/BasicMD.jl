@@ -48,6 +48,12 @@ For Metropolis methods, the latter form also returns the running acceptance rate
 Xvals, avals = sample_trajectory(X₀, sampler);
 ```
 
+The `sample_observables` routine is also included to allow for the computation of the observables directly.  This avoids storing an entire trajectory, which may be computationally expensive.  Given some set of observables, `f₁`, `f₂`, etc., storing these as a tuple, `obs=(f₁,f₂)`, they are computed directly with the command X   
+```
+obs_vals =  sample_observables(X₀ , sampler, obs)
+```
+This can otpionaly take the `MDOptions` in as an argument.
+
 ## MDOptions
 The number of iterations performed is determined by the optional `options`
 argument.  This takes as its argument a data structure which is formatted using
@@ -87,7 +93,6 @@ Both will sample the associated Boltzmann distribution, but the SDE trajectories
 # TO DO
 Before reaching a 1.0, the goals are:
 * Include GHMC samplers.  
-* Include reporter functions that allow for the computation of observables on at particular time intervals.  
 * Add to the package registry
 
 # Acknowledgements

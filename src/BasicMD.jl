@@ -41,7 +41,7 @@ using LinearAlgebra
 include("types.jl")
 include("sample.jl")
 include("utils.jl")
-export sample_trajectory, sample_trajectory!,
+export sample_trajectory, sample_trajectory!, sample_observables,
     MDOptions
 
 # RWM methods
