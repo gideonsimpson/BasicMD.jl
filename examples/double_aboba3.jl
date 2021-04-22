@@ -35,6 +35,6 @@ f₂_estimate = mean(f₂.(Xvals));
 @printf("f₁ estimate with %d samples: %g\n",length(Xvals), f₁_estimate);
 @printf("f₂ estimate with %d samples: %g\n", length(Xvals), f₂_estimate);
 Random.seed!(100);
-observable_samples = sample_observables([q₀, p₀], sampler, observables, options=MDOptions(n_iters=n_iters,n_save_iters=n_save_iters),TO=Float32);
+observable_samples = sample_observables(Float32, [q₀, p₀], sampler, observables, options=MDOptions(n_iters=n_iters,n_save_iters=n_save_iters));
 @printf("f₁ estimate with %d samples: %g\n",length(observable_samples), mean(observable_samples[1,:]));
 @printf("f₂ estimate with %d samples: %g\n", length(observable_samples), mean(observable_samples[2,:]));

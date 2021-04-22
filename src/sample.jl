@@ -88,9 +88,27 @@ are set using the `options` argument.  Only the computed observables are returne
 * `sampler`   - Desired sampler
 * `observables` - Observables on which to evaluate the trajectory
 ### Optional Fields
+* `TO`- Observable data type, if needed, should be entered as the first argument
 * `options`   - Sampling options, including number of iteration
 """
-@generated function sample_observables(x₀::Tx, sampler::S, observables::Tuple{Vararg{<:Function,NO}}; options=MDOptions(),TO=Float64) where {Tx,  S<:AbstractSampler, NO}
+@generated function sample_observables(x₀::Tx, sampler::S, observables::Tuple{Vararg{<:Function,NO}}; options=MDOptions()) where {Tx,  S<:AbstractSampler, NO}
+
+    quote
+        state = InitState(x₀, sampler);
+        observable_samples = zeros($NO, options.n_save);
+        save_index = 1;
+        for i = 1:options.n_iters
+            UpdateState!(state, sampler);
+            if(mod(i,options.n_save_iters)==0)
+                Base.Cartesian.@nexprs $NO k -> observable_samples[k,save_index] = (observables[k])(state.x);
+                save_index+=1;
+            end
+        end
+        return observable_samples
+    end
+end
+
+@generated function sample_observables(TO::Type, x₀::Tx, sampler::S, observables::Tuple{Vararg{<:Function,NO}}; options=MDOptions()) where {Tx,  S<:AbstractSampler, NO}
 
     quote
         state = InitState(x₀, sampler);
