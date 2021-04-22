@@ -90,11 +90,11 @@ are set using the `options` argument.  Only the computed observables are returne
 ### Optional Fields
 * `options`   - Sampling options, including number of iteration
 """
-@generated function sample_observables(x₀::Tx, sampler::S, observables::Tuple{Vararg{<:Function,NO}}; options=MDOptions()) where {Tx,  S<:AbstractSampler, NO}
+@generated function sample_observables(x₀::Tx, sampler::S, observables::Tuple{Vararg{<:Function,NO}}; options=MDOptions(),TO=Float64) where {Tx,  S<:AbstractSampler, NO}
 
     quote
         state = InitState(x₀, sampler);
-        observable_samples = zeros($NO, options.n_save);
+        observable_samples = zeros(TO, $NO, options.n_save);
         save_index = 1;
         for i = 1:options.n_iters
             UpdateState!(state, sampler);

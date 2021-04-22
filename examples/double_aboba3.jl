@@ -1,41 +1,40 @@
-# sample from the Muller potential using HMC
+# sample from a double well in 1D using ABOBA
 using Printf
 using Random
 using LinearAlgebra
 using ForwardDiff
-using BasicMD
 using Statistics
+using BasicMD
 
 include("potentials.jl")
 
-β = 0.1;
-M = [1.5, 0.75];
-x₀ = [-0.75, 1.5];
-Δt = 1e-2;
-n_iters = 10^6;
+β = Float32(5.0);
+γ = Float32(1.5);
+M = Float32(2.1);
+q₀ = Float32.([-1.0]);
+p₀ = Float32.([0.0]);
+Δt = Float32(1e-1);
+n_iters = 10^4;
 n_save_iters=10;
-nΔt = 10^2;
 
-V = x->Muller(x);
-cfg = ForwardDiff.GradientConfig(V, x₀);
+V = x->DoubleWell(x);
+cfg = ForwardDiff.GradientConfig(V, q₀);
 gradV! = (gradV, x)-> ForwardDiff.gradient!(gradV, V, x, cfg);
 
 # second moment and energy obsrevables
-f₁ = x-> x[1]^2;
-f₂ = x-> V(x);
+f₁ = x-> x[1][1]^2;
+f₂ = x-> V(x[1][1]);
 observables = (f₁, f₂);
 
-sampler = HMC(V, gradV!, β, M, Δt, nΔt);
-
+sampler = ABOBA(gradV!, β, γ, M, Δt);
 
 Random.seed!(100);
-Xvals,_ = sample_trajectory(x₀, sampler, options=MDOptions(n_iters=n_iters,n_save_iters=n_save_iters));
+Xvals = sample_trajectory([q₀, p₀], sampler, options=MDOptions(n_iters=n_iters,n_save_iters=n_save_iters));
 f₁_estimate = mean(f₁.(Xvals));
 f₂_estimate = mean(f₂.(Xvals));
 @printf("f₁ estimate with %d samples: %g\n",length(Xvals), f₁_estimate);
 @printf("f₂ estimate with %d samples: %g\n", length(Xvals), f₂_estimate);
 Random.seed!(100);
-observable_samples = sample_observables(x₀, sampler, observables, options=MDOptions(n_iters=n_iters,n_save_iters=n_save_iters));
+observable_samples = sample_observables([q₀, p₀], sampler, observables, options=MDOptions(n_iters=n_iters,n_save_iters=n_save_iters),TO=Float32);
 @printf("f₁ estimate with %d samples: %g\n",length(observable_samples), mean(observable_samples[1,:]));
 @printf("f₂ estimate with %d samples: %g\n", length(observable_samples), mean(observable_samples[2,:]));
-
