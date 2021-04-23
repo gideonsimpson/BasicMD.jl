@@ -117,7 +117,7 @@ end
         for i = 1:options.n_iters
             UpdateState!(state, sampler);
             if(mod(i,options.n_save_iters)==0)
-                Base.Cartesian.@nexprs $NO k -> observable_samples[k,save_index] = (observables[k])(state.x);
+                Base.Cartesian.@nexprs $NO k -> observable_samples[k,save_index] = convert(TO,(observables[k])(state.x));
                 save_index+=1;
             end
         end
