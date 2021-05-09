@@ -74,6 +74,7 @@ are set using the `options` argument.  Only the computed observables are returne
             if (recycler.inB(state))
                 recycler.restartA!(state)
             end
+            UpdateState!(state, sampler);
             if(mod(i,options.n_save_iters)==0)
                 Base.Cartesian.@nexprs $NO k -> observable_samples[k,save_index] = (observables[k])(state.x);
                 save_index+=1;
@@ -93,6 +94,7 @@ end
             if (recycler.inB(state))
                 recycler.restartA!(state)
             end
+            UpdateState!(state, sampler);
             if(mod(i,options.n_save_iters)==0)
                 Base.Cartesian.@nexprs $NO k -> observable_samples[k,save_index] = convert(TO,(observables[k])(state.x));
                 save_index+=1;
