@@ -40,9 +40,11 @@ using LinearAlgebra
 
 include("types.jl")
 include("sample.jl")
+include("sample_observables.jl")
+include("sample_recycle.jl")
 include("utils.jl")
-export sample_trajectory, sample_trajectory!, sample_observables,
-    MDOptions
+export sample_trajectory, sample_trajectory!, 
+    sample_observables, MDOptions, Recycler
 
 # RWM methods
 include("metropolis/zeroth_order/rwm.jl")

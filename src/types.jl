@@ -23,3 +23,5 @@ abstract type SecondOrderMetropolisSamplerState <: MetropolisSamplerState end
 abstract type ZerothOrderNonMetropolisSamplerState <: NonMetropolisSamplerState end
 abstract type FirstOrderNonMetropolisSamplerState <: NonMetropolisSamplerState end
 abstract type SecondOrderNonMetropolisSamplerState <: NonMetropolisSamplerState end
+
+abstract type AbstractRecycler end
