@@ -32,7 +32,8 @@ function restartA!(state::BasicMD.EMState)
     state
 end
 
-recycler = Recycler(restartA!, inB)
+
+recycler = Recycler(restartA!, inB);
 
 Random.seed!(100);
 X₀ = copy(x₀);

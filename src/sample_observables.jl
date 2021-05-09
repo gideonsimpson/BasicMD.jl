@@ -71,8 +71,10 @@ are set using the `options` argument.  Only the computed observables are returne
         observable_samples = zeros($NO, options.n_save);
         save_index = 1;
         for i = 1:options.n_iters
-            if (recycler.inB(state))
-                recycler.restartA!(state)
+            if(mod(i,recycler.n_recycle_iters)==0)
+                if (recycler.inB(state))
+                    recycler.restartA!(state)
+                end
             end
             UpdateState!(state, sampler);
             if(mod(i,options.n_save_iters)==0)
@@ -91,8 +93,10 @@ end
         observable_samples = zeros(TO, $NO, options.n_save);
         save_index = 1;
         for i = 1:options.n_iters
-            if (recycler.inB(state))
-                recycler.restartA!(state)
+            if(mod(i,recycler.n_recycle_iters)==0)
+                if (recycler.inB(state))
+                    recycler.restartA!(state)
+                end
             end
             UpdateState!(state, sampler);
             if(mod(i,options.n_save_iters)==0)
