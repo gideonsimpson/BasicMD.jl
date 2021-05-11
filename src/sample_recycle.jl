@@ -49,7 +49,7 @@ function sample_trajectory!(x::Tx, sampler::S, recycler::R; options=MDOptions())
 
     state = InitState!(x, sampler);
     for i in 1:options.n_iters
-        if(mod(i,recycler.n_recycle_iters)==0)
+        if(mod(i-1,recycler.n_recycle_iters)==0)
             if (recycler.inB(state))
                 recycler.restartA!(state)
             end
@@ -87,7 +87,7 @@ function sample_trajectory(x₀::Tx, sampler::S, recycler::R; options=MDOptions(
     acceptance_rates = zeros(options.n_save);
     save_index = 1;
     for i = 1:options.n_iters
-        if(mod(i,recycler.n_recycle_iters)==0)
+        if(mod(i-1,recycler.n_recycle_iters)==0)
             if (recycler.inB(state))
                 recycler.restartA!(state)
             end
@@ -110,7 +110,7 @@ function sample_trajectory(x₀::Tx, sampler::S, recycler::R; options=MDOptions(
     samples = Tx[similar(x₀) for i = 1:options.n_save];
     save_index = 1;
     for i = 1:options.n_iters
-        if(mod(i,recycler.n_recycle_iters)==0)
+        if(mod(i-1,recycler.n_recycle_iters)==0)
             if (recycler.inB(state))
                 recycler.restartA!(state)
             end
