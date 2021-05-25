@@ -45,12 +45,12 @@ end
 
 function InitState!(x₀, sampler::HMC)
     V = sampler.V(x₀);
-    return HMCState(x₀, copy(x₀), V, V, V, V, similar(x₀), similar(x₀), similar(x₀),similar(x₀), Int(0));
+    return HMCState(x₀, similar(x₀), V, V, V, V, similar(x₀), similar(x₀), similar(x₀),similar(x₀), Int(0));
 end
 
 function InitState(x₀, sampler::HMC)
     V = sampler.V(x₀);
-    return HMCState(copy(x₀), copy(x₀), V, V, V, V, similar(x₀), similar(x₀), similar(x₀),similar(x₀), Int(0));
+    return HMCState(deepcopy(x₀), deepcopy(x₀), V, V, V, V, similar(x₀), similar(x₀), similar(x₀),similar(x₀), Int(0));
 end
 
 #
