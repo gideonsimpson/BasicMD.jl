@@ -31,6 +31,7 @@ end
 function restartA!(state::BasicMD.BAOABState)
     @. state.x[1] = q₀;
     @. state.x[2] = p₀;
+    # gradV!(state.∇V,state.x[1]);
     state
 end
 recycler = Recycler(restartA!, inB, n_recycle)

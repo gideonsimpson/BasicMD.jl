@@ -29,6 +29,7 @@ function inB(state::BasicMD.EMState)
 end
 function restartA!(state::BasicMD.EMState)
     @. state.x = a;
+    gradV!(state.∇V, a);
     state
 end
 
