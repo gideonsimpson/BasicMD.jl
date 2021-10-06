@@ -26,7 +26,7 @@ mutable struct EMState{Tx} <:FirstOrderNonMetropolisSamplerState
     ∇V::Tx
 end
 
-function InitState!(x₀, sampler::EM) where Tx
+function InitState!(x₀, sampler::EM)
 
     ∇V = similar(x₀);
     sampler.∇V!(∇V, x₀);
