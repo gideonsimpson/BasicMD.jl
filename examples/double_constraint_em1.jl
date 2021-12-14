@@ -22,14 +22,16 @@ gradV! = (gradV, x) -> ForwardDiff.gradient!(gradV, V, x, cfg);
 sampler = EM(gradV!, β, Δt);
 
 # define the constraint to to keep the trajectory in the set A = [a,b]
-a = -1.5;
+a = -1.2;
 b = 0.5;
 function constraintA!(state::BasicMD.EMState, i)
     if state.x[1] < a
-        state.x[1] = a
+        @. state.x = a
+        gradV!(state.∇V, state.x)
     end
     if state.x[1] > b
-        state.x[1] = b
+        @. state.x = b
+        gradV!(state.∇V, state.x)
     end
     state
 end
