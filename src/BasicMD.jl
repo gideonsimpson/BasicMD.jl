@@ -44,7 +44,7 @@ include("sample_recycle.jl")
 include("sample_observables.jl")
 include("utils.jl")
 export sample_trajectory, sample_trajectory!, 
-    sample_observables, MDOptions, Recycler
+    sample_observables, MDOptions, Recycler, trivial_constraint!
 
 # RWM methods
 include("metropolis/zeroth_order/rwm.jl")

@@ -8,16 +8,18 @@ set using the `options` argument.
 
 ### Fields
 
-* x         - Starting position for sampler, modified in place
-* sampler   - Desired sampler
-* options   - Sampling options, including number of iteration
-
+* `x`         - Starting position for sampler, modified in place
+* `sampler`   - Desired sampler
+### Optional Fields
+* `options`   - Sampling options, including number of iteration
+* `constraint!` - Modifications of the trajectory i.e., to enforce constraints.
 """
-function sample_trajectory!(x::Tx, sampler::S; options=MDOptions()) where {Tx, S<:AbstractSampler}
+function sample_trajectory!(x::Tx, sampler::S; options = MDOptions(), constraint! = trivial_constraint!) where {Tx,S<:AbstractSampler}
 
-    state = InitState!(x, sampler);
-    for _ in 1:options.n_iters
-        UpdateState!(state, sampler);
+    state = InitState!(x, sampler)
+    for i = 1:options.n_iters
+        UpdateState!(state, sampler)
+        constraint!(state, i)
     end
     x
 end
@@ -31,45 +33,46 @@ running acceptance rates are also resturned.
 
 
 ### Fields
-
-* x         - Starting position for sampler, modified in place
-* sampler   - Desired sampler
-* options   - Sampling options, including number of iteration
-
+* `x`         - Starting position for sampler, modified in place
+* `sampler`   - Desired sampler
+### Optional Fields
+* `options`   - Sampling options, including number of iteration
+* `constraint!` - Modifications of the trajectory i.e., to enforce constraints
 """
-function sample_trajectory(x₀::Tx, sampler::S; options=MDOptions()) where {Tx,  S<:MetropolisSampler}
+function sample_trajectory(x₀::Tx, sampler::S; options = MDOptions(), constraint! = trivial_constraint!) where {Tx,S<:MetropolisSampler}
 
-    n_accept = Int(0);
+    n_accept = Int(0)
 
-    state = InitState(x₀, sampler);
+    state = InitState(x₀, sampler)
 
     # allocate memory for samples
-    samples = Tx[similar(x₀) for i = 1:options.n_save];
-    acceptance_rates = zeros(options.n_save);
-    save_index = 1;
+    samples = Tx[similar(x₀) for i = 1:options.n_save]
+    acceptance_rates = zeros(options.n_save)
+    save_index = 1
     for i = 1:options.n_iters
-        UpdateState!(state, sampler);
-        n_accept+=state.accept;
-        if(mod(i,options.n_save_iters)==0)
-            @. samples[save_index] = deepcopy(state.x);
-            acceptance_rates[save_index] = n_accept/i;
-            save_index+=1;
+        UpdateState!(state, sampler)
+        constraint!(state, i)
+        n_accept += state.accept
+        if (mod(i, options.n_save_iters) == 0)
+            @. samples[save_index] = deepcopy(state.x)
+            acceptance_rates[save_index] = n_accept / i
+            save_index += 1
         end
     end
     return samples, acceptance_rates
 end
 
+function sample_trajectory(x₀::Tx, sampler::S; options = MDOptions(), constraint! = trivial_constraint!) where {Tx,S<:NonMetropolisSampler}
 
-function sample_trajectory(x₀::Tx, sampler::S; options=MDOptions()) where {Tx,  S<:NonMetropolisSampler}
-
-    state = InitState(x₀, sampler);
-    samples = Tx[similar(x₀) for i = 1:options.n_save];
-    save_index = 1;
+    state = InitState(x₀, sampler)
+    samples = Tx[similar(x₀) for i = 1:options.n_save]
+    save_index = 1
     for i = 1:options.n_iters
-        UpdateState!(state, sampler);
-        if(mod(i,options.n_save_iters)==0)
-            @. samples[save_index] = deepcopy(state.x);
-            save_index+=1;
+        UpdateState!(state, sampler)
+        constraint!(state, i)
+        if (mod(i, options.n_save_iters) == 0)
+            @. samples[save_index] = deepcopy(state.x)
+            save_index += 1
         end
     end
     return samples
