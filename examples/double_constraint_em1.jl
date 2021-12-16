@@ -22,9 +22,10 @@ gradV! = (gradV, x) -> ForwardDiff.gradient!(gradV, V, x, cfg);
 sampler = EM(gradV!, β, Δt);
 
 # define the constraint to to keep the trajectory in the set A = [a,b]
+# this occurs after an update is taken
 a = -1.2;
 b = 0.5;
-function constraintA!(state::BasicMD.EMState, i)
+function constraintA!(state::BasicMD.EMState)
     if state.x[1] < a
         @. state.x = a
         gradV!(state.∇V, state.x)
@@ -38,16 +39,19 @@ end
 
 Random.seed!(100);
 X₀ = copy(x₀);
-sample_trajectory!(X₀, sampler, options = MDOptions(n_iters = n_iters), constraint! = constraintA!);
+sample_trajectory!(X₀, sampler, options = MDOptions(n_iters = n_iters),
+    constraints = Constraints(trivial_constraint!, constraintA!, 1, 1));
 @printf("In Place X after %d iterations: %g\n", n_iters, X₀[1])
 
 Random.seed!(100);
-Xvals = sample_trajectory(x₀, sampler, options = MDOptions(n_iters = n_iters, n_save_iters = n_iters), constraint! = constraintA!);
+Xvals = sample_trajectory(x₀, sampler, options = MDOptions(n_iters = n_iters, n_save_iters = n_iters),
+    constraints = Constraints(trivial_constraint!, constraintA!, 1, 1));
 X = Xvals[end];
 @printf("X after %d iterations: %g\n", n_iters, X[1])
 
 Random.seed!(100);
-X_vals = sample_trajectory(x₀, sampler, options = MDOptions(n_iters = n_iters),constraint! = constraintA!);
+X_vals = sample_trajectory(x₀, sampler, options = MDOptions(n_iters = n_iters),
+    constraints = Constraints(trivial_constraint!, constraintA!, 1, 1));
 histogram([X[1] for X in X_vals], label = "Samples", normalize = true)
 xlabel!("x")
 ylabel!("Frequency")

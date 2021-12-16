@@ -13,16 +13,18 @@ are set using the `options` argument.  Only the computed observables are returne
 ### Optional Fields
 * `TO`- Observable data type, if needed, should be entered as the first argument
 * `options`   - Sampling options, including number of iteration
-* `constraint!` - Modifications of the trajectory i.e., to enforce constraints.
+* `constraints` - Constraints on the trajectory
 """
-function sample_observables(x₀::Tx, sampler::S, observables::Tuple{Vararg{<:Function,NO}}; options = MDOptions(), constraint! = trivial_constraint!) where {Tx,S<:AbstractSampler,NO}
+function sample_observables(x₀::Tx, sampler::S, observables::Tuple{Vararg{<:Function,NO}};
+    options = MDOptions(), constraints::C = Constraints()) where {Tx,S<:AbstractSampler,NO, C<:AbstractConstraints}
 
     state = InitState(x₀, sampler)
     observable_samples = zeros(NO, options.n_save)
     save_index = 1
     for i = 1:options.n_iters
+        constraints.before_update!(state, i)
         UpdateState!(state, sampler)
-        constraint!(state, i)
+        constraints.after_update!(state, i)
         if (mod(i, options.n_save_iters) == 0)
             ntuple(k -> observable_samples[k, save_index] = (observables[k])(state.x), NO)
             # Base.Cartesian.@nexprs $NO k -> observable_samples[k,save_index] = (observables[k])(state.x);
@@ -33,14 +35,16 @@ function sample_observables(x₀::Tx, sampler::S, observables::Tuple{Vararg{<:Fu
 
 end
 
-function sample_observables(TO::Type, x₀::Tx, sampler::S, observables::Tuple{Vararg{<:Function,NO}}; options = MDOptions(), constraint! = trivial_constraint!) where {Tx,S<:AbstractSampler,NO}
+function sample_observables(TO::Type, x₀::Tx, sampler::S, observables::Tuple{Vararg{<:Function,NO}};
+    options = MDOptions(), constraints::C = Constraints()) where {Tx,S<:AbstractSampler,NO, C<:AbstractConstraints}
 
     state = InitState(x₀, sampler)
     observable_samples = zeros(TO, NO, options.n_save)
     save_index = 1
     for i = 1:options.n_iters
+        constraints.before_update!(state, i)
         UpdateState!(state, sampler)
-        constraint!(state, i)
+        constraints.after_update!(state, i)
         if (mod(i, options.n_save_iters) == 0)
             ntuple(k -> observable_samples[k, save_index] = (observables[k])(state.x), NO)
             # Base.Cartesian.@nexprs $NO k -> observable_samples[k,save_index] = convert(TO,(observables[k])(state.x));

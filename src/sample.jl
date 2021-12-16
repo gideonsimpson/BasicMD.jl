@@ -12,14 +12,20 @@ set using the `options` argument.
 * `sampler`   - Desired sampler
 ### Optional Fields
 * `options`   - Sampling options, including number of iteration
-* `constraint!` - Modifications of the trajectory i.e., to enforce constraints.
+* `constraints` - Constraints on the trajectory
 """
-function sample_trajectory!(x::Tx, sampler::S; options = MDOptions(), constraint! = trivial_constraint!) where {Tx,S<:AbstractSampler}
+function sample_trajectory!(x::Tx, sampler::S; options = MDOptions(), constraints::C = Constraints()) where {Tx,S<:AbstractSampler,C<:AbstractConstraints}
 
     state = InitState!(x, sampler)
     for i = 1:options.n_iters
+        if (mod(i - 1, constraints.n_before) == 0)
+            constraints.before_update!(state)
+        end
         UpdateState!(state, sampler)
-        constraint!(state, i)
+        if (mod(i - 1, constraints.n_after) == 0)
+            constraints.after_update!(state)
+        end
+        # constraint!(state, i)
     end
     x
 end
@@ -39,7 +45,7 @@ running acceptance rates are also resturned.
 * `options`   - Sampling options, including number of iteration
 * `constraint!` - Modifications of the trajectory i.e., to enforce constraints
 """
-function sample_trajectory(x₀::Tx, sampler::S; options = MDOptions(), constraint! = trivial_constraint!) where {Tx,S<:MetropolisSampler}
+function sample_trajectory(x₀::Tx, sampler::S; options = MDOptions(), constraints::C = Constraints()) where {Tx,S<:MetropolisSampler,C<:AbstractConstraints}
 
     n_accept = Int(0)
 
@@ -50,8 +56,13 @@ function sample_trajectory(x₀::Tx, sampler::S; options = MDOptions(), constrai
     acceptance_rates = zeros(options.n_save)
     save_index = 1
     for i = 1:options.n_iters
+        if (mod(i - 1, constraints.n_before) == 0)
+            constraints.before_update!(state)
+        end
         UpdateState!(state, sampler)
-        constraint!(state, i)
+        if (mod(i - 1, constraints.n_after) == 0)
+            constraints.after_update!(state)
+        end
         n_accept += state.accept
         if (mod(i, options.n_save_iters) == 0)
             @. samples[save_index] = deepcopy(state.x)
@@ -62,14 +73,19 @@ function sample_trajectory(x₀::Tx, sampler::S; options = MDOptions(), constrai
     return samples, acceptance_rates
 end
 
-function sample_trajectory(x₀::Tx, sampler::S; options = MDOptions(), constraint! = trivial_constraint!) where {Tx,S<:NonMetropolisSampler}
+function sample_trajectory(x₀::Tx, sampler::S; options = MDOptions(), constraints::C = Constraints()) where {Tx,S<:NonMetropolisSampler,C<:AbstractConstraints}
 
     state = InitState(x₀, sampler)
     samples = Tx[similar(x₀) for i = 1:options.n_save]
     save_index = 1
     for i = 1:options.n_iters
+        if (mod(i - 1, constraints.n_before) == 0)
+            constraints.before_update!(state)
+        end
         UpdateState!(state, sampler)
-        constraint!(state, i)
+        if (mod(i - 1, constraints.n_after) == 0)
+            constraints.after_update!(state)
+        end
         if (mod(i, options.n_save_iters) == 0)
             @. samples[save_index] = deepcopy(state.x)
             save_index += 1

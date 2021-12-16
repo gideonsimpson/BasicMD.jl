@@ -25,3 +25,5 @@ abstract type FirstOrderNonMetropolisSamplerState <: NonMetropolisSamplerState e
 abstract type SecondOrderNonMetropolisSamplerState <: NonMetropolisSamplerState end
 
 abstract type AbstractRecycler end
+
+abstract type AbstractConstraints end

@@ -39,12 +39,15 @@ using LinearAlgebra
 
 
 include("types.jl")
+include("constraints.jl")
 include("sample.jl")
-include("sample_recycle.jl")
+# include("sample_recycle.jl")
 include("sample_observables.jl")
 include("utils.jl")
-export sample_trajectory, sample_trajectory!, 
-    sample_observables, MDOptions, Recycler, trivial_constraint!
+export sample_trajectory, sample_trajectory!,
+    sample_observables, MDOptions, Constraints, trivial_constraint!
+
+# , Recycler, trivial_constraint!
 
 # RWM methods
 include("metropolis/zeroth_order/rwm.jl")

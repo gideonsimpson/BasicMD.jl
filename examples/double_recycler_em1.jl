@@ -15,40 +15,46 @@ seed = 100;
 Δt = 1e-2;
 n_iters = 10^5; # number of samples
 
-V = x->DoubleWell(x);
+V = x -> DoubleWell(x);
 cfg = ForwardDiff.GradientConfig(V, x₀);
-gradV! = (gradV, x)-> ForwardDiff.gradient!(gradV, V, x, cfg);
+gradV! = (gradV, x) -> ForwardDiff.gradient!(gradV, V, x, cfg);
 
 sampler = EM(gradV!, β, Δt);
 
 # define the recycling functions
 a = [-1.0];
 b = 0.9;
-function inB(state::BasicMD.EMState)
-    return state.x[1]>b
-end
-function restartA!(state::BasicMD.EMState)
-    @. state.x = a;
-    gradV!(state.∇V, a);
+# function inB(state::BasicMD.EMState)
+#     return state.x[1] > b
+# end
+# function restartA!(state::BasicMD.EMState)
+#     @. state.x = a
+#     gradV!(state.∇V, a)
+#     state
+# end
+function recycler!(state::BasicMD.EMState, i)
+    if state.x[1] > b
+        @. state.x = a
+        gradV!(state.∇V, a)
+    end
     state
 end
 
-
-recycler = Recycler(restartA!, inB);
+recycler = Constraints(recycler!, trivial_constraint!, 1, 1);
 
 Random.seed!(100);
 X₀ = copy(x₀);
-sample_trajectory!(X₀, sampler,recycler,  options=MDOptions(n_iters=n_iters));
-@printf("In Place X after %d iterations: %g\n",n_iters, X₀[1])
+sample_trajectory!(X₀, sampler, options = MDOptions(n_iters = n_iters), constraints = recycler);
+@printf("In Place X after %d iterations: %g\n", n_iters, X₀[1])
 
 Random.seed!(100);
-Xvals = sample_trajectory(x₀, sampler,recycler, options=MDOptions(n_iters=n_iters,n_save_iters=n_iters));
+Xvals = sample_trajectory(x₀, sampler, options = MDOptions(n_iters = n_iters, n_save_iters = n_iters), constraints = recycler);
 X = Xvals[end];
-@printf("X after %d iterations: %g\n",n_iters, X[1])
+@printf("X after %d iterations: %g\n", n_iters, X[1])
 
 Random.seed!(100);
-X_vals = sample_trajectory(x₀, sampler,recycler, options=MDOptions(n_iters=n_iters));
-histogram([X[1] for X in X_vals],label="Samples",normalize=true)
+X_vals = sample_trajectory(x₀, sampler, options = MDOptions(n_iters = n_iters), constraints = recycler);
+histogram([X[1] for X in X_vals], label = "Samples", normalize = true)
 xlabel!("x")
 ylabel!("Frequency")
 
