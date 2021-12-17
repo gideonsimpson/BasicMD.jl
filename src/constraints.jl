@@ -9,7 +9,7 @@ function trivial_constraint!(state::TS) where{TS<:AbstractSamplerState}
     state
 end
 
-function Constraints(; before!::TA = trivial_constraint!, after!::TB = trivial_constraint!, n_before::to_indices = 1, n_after::TI = 1) where {TA,TB, TI<:Integer}
+function Constraints(; before!::TA = trivial_constraint!, after!::TB = trivial_constraint!, n_before::TI = 1, n_after::TI = 1) where {TA,TB, TI<:Integer}
     return Constraints(before!, after!, n_before, n_after)
 end
 

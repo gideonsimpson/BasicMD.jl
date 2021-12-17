@@ -22,7 +22,7 @@ function sample_trajectory!(x::Tx, sampler::S; options = MDOptions(), constraint
             constraints.before_update!(state)
         end
         UpdateState!(state, sampler)
-        if (mod(i - 1, constraints.n_after) == 0)
+        if (mod(i, constraints.n_after) == 0)
             constraints.after_update!(state)
         end
         # constraint!(state, i)
@@ -60,7 +60,7 @@ function sample_trajectory(x₀::Tx, sampler::S; options = MDOptions(), constrai
             constraints.before_update!(state)
         end
         UpdateState!(state, sampler)
-        if (mod(i - 1, constraints.n_after) == 0)
+        if (mod(i, constraints.n_after) == 0)
             constraints.after_update!(state)
         end
         n_accept += state.accept
@@ -83,7 +83,7 @@ function sample_trajectory(x₀::Tx, sampler::S; options = MDOptions(), constrai
             constraints.before_update!(state)
         end
         UpdateState!(state, sampler)
-        if (mod(i - 1, constraints.n_after) == 0)
+        if (mod(i, constraints.n_after) == 0)
             constraints.after_update!(state)
         end
         if (mod(i, options.n_save_iters) == 0)

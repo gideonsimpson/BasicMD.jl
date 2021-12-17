@@ -24,15 +24,7 @@ sampler = EM(gradV!, β, Δt);
 # define the recycling functions
 a = [-1.0];
 b = 0.9;
-# function inB(state::BasicMD.EMState)
-#     return state.x[1] > b
-# end
-# function restartA!(state::BasicMD.EMState)
-#     @. state.x = a
-#     gradV!(state.∇V, a)
-#     state
-# end
-function recycler!(state::BasicMD.EMState, i)
+function recycler!(state::BasicMD.EMState)
     if state.x[1] > b
         @. state.x = a
         gradV!(state.∇V, a)
