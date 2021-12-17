@@ -43,7 +43,7 @@ running acceptance rates are also resturned.
 * `sampler`   - Desired sampler
 ### Optional Fields
 * `options`   - Sampling options, including number of iteration
-* `constraint!` - Modifications of the trajectory i.e., to enforce constraints
+* `constraints` - Constraints on the trajectory
 """
 function sample_trajectory(x₀::Tx, sampler::S; options = MDOptions(), constraints::C = Constraints()) where {Tx,S<:MetropolisSampler,C<:AbstractConstraints}
 
