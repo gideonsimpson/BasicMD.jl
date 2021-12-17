@@ -68,6 +68,9 @@ iteration is saved.  If n_save_iters=n_iters, only the final iteration is saved.
 
 All of these methods have two versions, `Integrator` and `Integrator!`.  The `Integrator!` routine performs an in place transformation on the starting position (and momentum, where appropriate), while `Integrator` copies over the initial condition.  `Integrator` also accepts the optional argument `return_trajectory=true/false`, which will return the entire time series data.
 
+# Constraints (Experimental)
+While likely more relevant for integrating discretized SDEs than sampling, a means of constraining the flow has been introduced using the `Constraints` structure – see the examples.
+
 # Examples
 Example codes include:
 
