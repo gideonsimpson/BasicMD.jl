@@ -36,22 +36,20 @@ function constraintA!(state::BasicMD.EMState)
     end
     state
 end
+constraints = Constraints(trivial_constraint!, constraintA!, 1, 1)
 
 Random.seed!(100);
 X₀ = copy(x₀);
-sample_trajectory!(X₀, sampler, options = MDOptions(n_iters = n_iters),
-    constraints = Constraints(trivial_constraint!, constraintA!, 1, 1));
+sample_trajectory!(X₀, sampler, constraints, options = MDOptions(n_iters = n_iters));
 @printf("In Place X after %d iterations: %g\n", n_iters, X₀[1])
 
 Random.seed!(100);
-Xvals = sample_trajectory(x₀, sampler, options = MDOptions(n_iters = n_iters, n_save_iters = n_iters),
-    constraints = Constraints(trivial_constraint!, constraintA!, 1, 1));
+Xvals = sample_trajectory(x₀, sampler, constraints, options = MDOptions(n_iters = n_iters, n_save_iters = n_iters));
 X = Xvals[end];
 @printf("X after %d iterations: %g\n", n_iters, X[1])
 
 Random.seed!(100);
-X_vals = sample_trajectory(x₀, sampler, options = MDOptions(n_iters = n_iters),
-    constraints = Constraints(trivial_constraint!, constraintA!, 1, 1));
+X_vals = sample_trajectory(x₀, sampler, constraints, options = MDOptions(n_iters = n_iters));
 histogram([X[1] for X in X_vals], label = "Samples", normalize = true)
 xlabel!("x")
 ylabel!("Frequency")

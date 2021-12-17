@@ -36,16 +36,16 @@ recycler = Constraints(recycler!, trivial_constraint!, 1, 1);
 
 Random.seed!(100);
 X₀ = copy(x₀);
-sample_trajectory!(X₀, sampler, options = MDOptions(n_iters = n_iters), constraints = recycler);
+sample_trajectory!(X₀, sampler, recycler, options = MDOptions(n_iters = n_iters));
 @printf("In Place X after %d iterations: %g\n", n_iters, X₀[1])
 
 Random.seed!(100);
-Xvals = sample_trajectory(x₀, sampler, options = MDOptions(n_iters = n_iters, n_save_iters = n_iters), constraints = recycler);
+Xvals = sample_trajectory(x₀, sampler, recycler, options = MDOptions(n_iters = n_iters, n_save_iters = n_iters));
 X = Xvals[end];
 @printf("X after %d iterations: %g\n", n_iters, X[1])
 
 Random.seed!(100);
-X_vals = sample_trajectory(x₀, sampler, options = MDOptions(n_iters = n_iters), constraints = recycler);
+X_vals = sample_trajectory(x₀, sampler, recycler, options = MDOptions(n_iters = n_iters));
 histogram([X[1] for X in X_vals], label = "Samples", normalize = true)
 xlabel!("x")
 ylabel!("Frequency")

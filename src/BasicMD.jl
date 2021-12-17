@@ -41,9 +41,10 @@ include("types.jl")
 include("constraints.jl")
 include("sample.jl")
 include("sample_observables.jl")
+include("sample_constraints.jl")
 include("utils.jl")
 export sample_trajectory, sample_trajectory!,
-    sample_observables, MDOptions, 
+    sample_observables, MDOptions,
     Constraints, trivial_constraint!
 # RWM methods
 include("metropolis/zeroth_order/rwm.jl")
