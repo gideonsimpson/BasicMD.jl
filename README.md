@@ -1,4 +1,8 @@
 # BasicMD
+
+
+[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://gideonsimpson.github.io/BasicMD.jl/dev)
+
 A collection of basic routines for Molecular Dynamics simulations written in Julia.  These include
 * Euler–Maruyama (EM)
 * Random Walk Metropolis (RWM)
