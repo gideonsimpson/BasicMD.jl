@@ -23,6 +23,8 @@ docs/site/
 # environment.
 Manifest.toml
 
+# Mac Files
+.DS_Store
 
 # VS code folder
 .vscode/*
