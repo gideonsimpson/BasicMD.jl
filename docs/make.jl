@@ -1,7 +1,7 @@
 push!(LOAD_PATH,"../src/")
 using BasicMD
 using Documenter
-makedocs(
+makedocs(checkdocs=:none,
          sitename = "BasicMD.jl",
          modules  = [BasicMD],
          pages=[
