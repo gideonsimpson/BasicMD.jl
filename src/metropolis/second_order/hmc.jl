@@ -19,6 +19,7 @@ Set up the HMC sampler for Boltzmann.
 * V     - Potential
 * ∇V!   - In place gradient of the potential
 * β     - Inverse temperature
+* M     - Mass matrix
 * Δt    - Time step
 * nΔt   - Number of time steps to use in each Verlet run
 """

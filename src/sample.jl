@@ -31,7 +31,7 @@ running acceptance rates are also resturned.
 
 
 ### Fields
-* `x`         - Starting position for sampler, modified in place
+* `x₀`         - Starting position for sampler, modified in place
 * `sampler`   - Desired sampler
 ### Optional Fields
 * `options`   - Sampling options, including number of iteration

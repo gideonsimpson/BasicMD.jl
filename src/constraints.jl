@@ -6,7 +6,7 @@ struct Constraints{TA,TB} <: AbstractConstraints
 end
 
 """
-    trivial_constraint!
+    trivial_constraint!(state::TS) where {TS<:AbstractSamplerState}
 
 Trival constraint function
 """
@@ -15,7 +15,7 @@ function trivial_constraint!(state::TS) where {TS<:AbstractSamplerState}
 end
 
 """
-    Constraints
+    Constraints(; before!::TA = trivial_constraint!, after!::TB = trivial_constraint!, n_before::TI = 1, n_after::TI = 1) where {TA,TB,TI<:Integer}
 
 Set constraints on the sampler, if desired
 ### Fields
@@ -24,7 +24,6 @@ Set constraints on the sampler, if desired
 * `n_before = 1` - Perform `before!` at `0, n_before-1, 2 n_before-1,...`
 * `n_after = 1` - Perform `after!` at `n_after, 2 n_after,...`
 """
-
 function Constraints(; before!::TA = trivial_constraint!, after!::TB = trivial_constraint!, n_before::TI = 1, n_after::TI = 1) where {TA,TB,TI<:Integer}
     return Constraints(before!, after!, n_before, n_after)
 end

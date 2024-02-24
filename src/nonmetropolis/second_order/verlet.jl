@@ -21,18 +21,33 @@ mutable struct VerletState{Tq, Tx<:AbstractVector{Tq}} <:SecondOrderNonMetropoli
     p_mid::Tq
 end
 
+"""
+    InitState!(x₀, sampler::Verlet)
+
+TBW
+"""
 function InitState!(x₀, sampler::Verlet)
     ∇V = similar(x₀[1])
     sampler.∇V!(∇V , x₀[1]);
     return VerletState(x₀, copy(∇V) , similar(x₀[1]));
 end
 
+"""
+    InitState(x₀, sampler::Verlet)
+
+TBW
+"""
 function InitState(x₀, sampler::Verlet)
     ∇V = similar(x₀[1])
     sampler.∇V!(∇V , x₀[1]);
     return VerletState(deepcopy(x₀), copy(∇V) , similar(x₀[1]));
 end
 
+"""
+    UpdateState!(state::VerletState, sampler::Verlet)
+
+TBW
+"""
 function UpdateState!(state::VerletState, sampler::Verlet)
     @. state.p_mid = state.x[2] - 0.5 * sampler.Δt * state.∇V;
     @. state.x[1] = state.x[1] + sampler.Δt * state.p_mid/sampler.M;
