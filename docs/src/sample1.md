@@ -39,7 +39,6 @@ where the additional arguments are:
     sample_trajectory
 ```
 
-
 Having created the sampler strucutre and chosen an initial point, `x0`, we call `sample_trajectory`:
 ```
 xvals, avals = sampler_trajectory(x0, sampler);
@@ -49,135 +48,10 @@ For a Metropolis sampler, like RWM, we return:
 * `avals` - the running average of the acceptance rate For non-Metropolis
 samplers, the `avals` argument is not returned. 
 
-#### RWM Example
+Examples:
 
-```@example
-using Plots
-using Printf
-using Random
-using BasicMD
-
-function V(x)
-    return (x[1]^2 -1)^2
-end
-
-β = 5.0;
-x0 = [-1.0];
-seed = 100;
-Δt = 1e-1;
-n_iters = 10^4; # number of samples
-
-sampler = RWM(V, β, Δt);
-
-Random.seed!(100);
-
-xvals, avals = sample_trajectory(x0, sampler, options=MDOptions(n_iters=n_iters));
-
-histogram([x_[1] for x_ in xvals],label="RWM Samples",normalize=true)
-xlabel!("x")
-ylabel!("Frequency")
-```
-
-#### HMC Example
-```@example
-using Plots
-using Printf
-using Random
-using BasicMD
-using ForwardDiff
-
-function V(x)
-    return (x[1]^2 -1)^2
-end
-
-gradV! = (gradV, x)-> ForwardDiff.gradient!(gradV, V, x);
-
-
-β = 5.0;
-x0 = [-1.0];
-seed = 100;
-M = 1.;
-nΔt = 10^1; # number of Verlet steps per HMC iteration
-Δt = 1e-1;
-n_iters = 10^4; # number of samples
-
-sampler = HMC(V, gradV!, β, M, Δt, nΔt);
-
-Random.seed!(100);
-
-xvals, avals = sample_trajectory(x0, sampler, options=MDOptions(n_iters=n_iters));
-
-histogram([x_[1] for x_ in xvals],label="HMC Samples",normalize=true)
-xlabel!("x")
-ylabel!("Frequency")
-```
-
-#### Euler-Maruyama Example
-```@example
-using Plots
-using Printf
-using Random
-using BasicMD
-using ForwardDiff
-
-function V(x)
-    return (x[1]^2 -1)^2
-end
-
-gradV! = (gradV, x)-> ForwardDiff.gradient!(gradV, V, x);
-
-
-β = 5.0;
-x0 = [-1.0];
-seed = 100;
-Δt = 1e-1;
-n_iters = 10^4; # number of samples
-
-sampler = EM(gradV!, β, Δt);
-
-Random.seed!(100);
-
-xvals = sample_trajectory(x0, sampler, options=MDOptions(n_iters=n_iters));
-
-histogram([x_[1] for x_ in xvals],label="EM Samples",normalize=true)
-xlabel!("x")
-ylabel!("Frequency")
-```
-
-#### ABOBA Example
-```@example
-using Plots
-using Printf
-using Random
-using BasicMD
-using ForwardDiff
-
-function V(x)
-    return (x[1]^2 -1)^2
-end
-
-gradV! = (gradV, x)-> ForwardDiff.gradient!(gradV, V, x);
-
-
-β = 5.0;
-γ = 1.;
-M = 1.;
-q0 = [-1.0];
-p0 = [0.0]; # as ABOBA is an inertial sampler, we need to specify a momentum
-x0 = [copy(q0), copy(p0)];
-seed = 100;
-Δt = 1e-1;
-n_iters = 10^4; # number of samples
-
-sampler = ABOBA(gradV!, β, γ, M, Δt);
-opts = MDOptions(n_iters=n_iters);
-
-Random.seed!(100);
-xvals = sample_trajectory(x0, sampler, options= opts);
-
-histogram([x_[1][1] for x_ in xvals],label="ABOBA Samples",normalize=true)
-xlabel!("x")
-ylabel!("Frequency")
+```@contents
+Pages = ["examples/sample_traj1.md"]
 ```
 
 ### Controlling Output
@@ -192,7 +66,45 @@ with
 
 
 ## Sampling Observables
-TBW
+
+Often, one is not interested in the full trajectory ``\{X_t\}``, but rather the time series observables computed on the trajectory.  Given a function ``f:\mathbb{R}^d\to \mathbb{R}``, it may be satisfactory to simply know ``\{f(X_t)\}``.  When ``d`` is high dimensional, only saving the observavble can cut computational cost and storage. Typically, this is done in order to estimate ergodic averages,
+```math
+\mathbb{E}_\mu[f(X)] = \int f(x)\mu(dx) \approx \frac{1}{n}\sum_{n=1}^n f(X_{t_n}).
+```
+
+
+This is accomplished using
+```@docs 
+    sample_observables
+```
+
+This is quite similar to `sample_trajectory`, except that one must pass an additional argument, a structure containing the desired observables.  Additionally, only the time series of observables is returned, regardless of whether a Metropolis sampler is used or not.  
+
+The `observables` argument should be a tuple of scalar valued functions, i.e. for a single observable:
+```
+f(x) = x[1]; # first component
+obs = (f,);
+```
+and for multiple observables:
+```
+f₁(x) = x[1]; # first component
+f₂(x) = V(x); # energy
+obs = (f₁,f₂);
+```
+When calling the function,
+```
+observable_traj = sample_observables(x₀, sampler,obs, options=opts);
+```
+the returned object, `observable_traj` is a matrix.  Each row corresponding to
+an individual observable, recorded at the times specified by the `MDOptions`.
+
+Examples:
+
+```@contents
+Pages = ["examples/sample_obs1.md"]
+```
+
+
 
 ## Sampling with Constraints (EXPERIMENTAL)
 TBW

@@ -14,6 +14,7 @@ x₀ = [-1.0];
 seed = 100;
 Δt = 1e-1;
 n_iters = 10^4; # number of samples
+n_save_iters = 10;
 
 V = x->DoubleWell(x);
 
