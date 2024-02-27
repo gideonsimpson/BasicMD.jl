@@ -5,7 +5,7 @@ Pages = ["sample1.md"]
 Depth = 4
 ```
 
-## Sampling Boltzmann 
+## Sampling Trajectories and Boltzmann
 At their core, all of the included methods sample, approximately, from Botlzmann
 distributinos of the type ``\mu(x) \propto e^{-\beta V(x)}``, where the user
 must specify the potential, `V(x)`, along with an appropriate inverse temperature, `β`.  

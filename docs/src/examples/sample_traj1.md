@@ -103,6 +103,9 @@ ylabel!("Frequency")
 ```
 
 ## ABOBA Example
+!!! note "Coordinates for Inertial Samplers"
+    For inertial samplers, which approximate the underdamped Langevin equation, since the trajectory ``x(t) = (q(t), p(t))``, it is neccessary to provide both an initial position __and__ an initial momentum.
+
 ```@example
 using Plots
 using Printf

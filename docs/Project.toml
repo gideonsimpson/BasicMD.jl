@@ -1,5 +1,7 @@
 [deps]
+BasicMD = "f448d96e-cc9b-4179-976a-6795f3ef2db6"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 ForwardDiff = "f6369f11-7733-5829-9624-2563aa707210"
 Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+TestLandscapes = "acebfb02-3096-4040-86f5-d41b0f19d497"
