@@ -28,3 +28,9 @@ Manifest.toml
 
 # VS code folder
 .vscode/*
+
+# local scratch folder
+scratch/*
+
+# generated files
+*.ipynb_checkpoints
