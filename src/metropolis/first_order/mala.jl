@@ -43,7 +43,8 @@ and time step Δt
 function MALA_likelihood(X₀, X₁, gradV0, β, Δt)
     #norm of increment squared
     norminc2 = 0.0;
-    for i = 1:length(X₀)
+    d = length(X₀);
+    for i = 1:d
         norminc2 += (X₁[i]-X₀[i] + Δt * gradV0[i])^2;
     end
     return exp( -β * (norminc2) / (4*Δt) );
