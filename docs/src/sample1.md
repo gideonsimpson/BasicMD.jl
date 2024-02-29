@@ -118,6 +118,8 @@ The constraints are constructed with
 ```@docs
     Constraints
 ```
+`before_update!` and `after_update!` are in place transforms on the sampler's state type.  As their names imply, one is called before the sampler update step while the other is called after.  Additionally, they need not be executed at every step, and can instead be called every `n_before` or every `n_after` steps, as desired.  Set these to `1` and `1` if you wish to call them at every step.  `trivial_constraint!` is included, and may be used for either the `before_update!` or `after_update!` steps; this leaves the state undisturbed.
+
 
 A key motivation for including this constraint module was to be able to sample from
 non-equilibrium steady states.  In particular, consider the case that we have a
@@ -134,4 +136,12 @@ Here, $\tilde{X}_k$ is a modified discrete-in-time process that resets to $x_0$ 
 \tilde{X}_{k+1} = \begin{cases} \tilde{X}_k - \nabla V(\tilde{X}_k) \Delta t   + \sqrt{2\beta^{-1}\Delta t}\xi_{k+1} & \tilde{X}_k \notin B\\
 x_0 & \tilde{X}_k \in B
 \end{cases}
+```
+
+
+
+Examples:
+
+```@contents
+Pages = ["examples/sample_con1.md"]
 ```
