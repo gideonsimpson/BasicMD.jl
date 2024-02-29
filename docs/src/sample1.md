@@ -116,7 +116,15 @@ traj = sample_trajectory(x₀, sampler, constraints);
 ```
 The constraints are constructed with
 ```@docs
-    trivial_constraint!
+    Constraints
 ```
 
-## Recylcing (EXPERIMENTAL)
+A key motivation for including this constraint module was to be able to sample from
+non-equilibrium steady states.  In particular, consider the case that we have a
+(continuous) trajectory, ``X_t`` with ``X_0 = x_0``.  When ``X_t`` arrives at some set ``B``, it __recycles__ to ``x_0``, and repeats.  Running this process to equilibrium and computing the particle flux into set ``B`` allows one to estimate the Mean First Passage Time (MFPT) form ``x_0\to B``:
+```math
+\frac{1}{\text{Mean First Passage Time}} = \lim_{T\to \infty} \frac{\text{Cumulative \# of arrivals at $B$ till time $T$}}{T} 
+```
+This can be approximated in a finite time simulation with time step ``\Delta t`` by the expression
+```math
+```
