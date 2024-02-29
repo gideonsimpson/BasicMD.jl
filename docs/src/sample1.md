@@ -36,7 +36,7 @@ where the additional arguments are:
 * 
 ### Sampling a Trajectory
 ```@docs 
-    sample_trajectory
+    sample_trajectory(::Tx, ::S; options = MDOptions()) where {Tx,S<:BasicMD.MetropolisSampler}
 ```
 
 Having created the sampler strucutre and chosen an initial point, `x0`, we call `sample_trajectory`:
@@ -61,7 +61,7 @@ Additionally, one may be in the setting where we do not need to record the full
 trajectory, but merely the position at the terminal iterate.  This is handled
 with
 ```@docs 
-    sample_trajectory!
+    sample_trajectory!(::Tx, ::S; options = MDOptions()) where {Tx,S<:BasicMD.MetropolisSampler}
 ```
 
 
@@ -75,7 +75,8 @@ Often, one is not interested in the full trajectory ``\{X_t\}``, but rather the 
 
 This is accomplished using
 ```@docs 
-    sample_observables
+    sample_observables(x₀::Tx, sampler::S, observables::Tuple{Vararg{<:Function,NO}};
+    options = MDOptions()) where {Tx,S<:BasicMD.AbstractSampler,NO}
 ```
 
 This is quite similar to `sample_trajectory`, except that one must pass an additional argument, a structure containing the desired observables.  Additionally, only the time series of observables is returned, regardless of whether a Metropolis sampler is used or not.  
@@ -107,4 +108,15 @@ Pages = ["examples/sample_obs1.md"]
 
 
 ## Sampling with Constraints (EXPERIMENTAL)
-TBW
+Elementary tools for enforcing constraints on the system, like ``X_t \in A`` or
+``g(X_t)=0`` have been implemented.  This is accomplished by passing a
+`constraints` structure to one of `sample_trajectory!`, `sample_trajectory`, or `sample_obsevables`:
+```
+traj = sample_trajectory(x₀, sampler, constraints);
+```
+The constraints are constructed with
+```@docs
+    trivial_constraint!
+```
+
+## Recylcing (EXPERIMENTAL)
