@@ -1,18 +1,21 @@
-"""
-    Verlet(∇V!, M, Δt)
-
-Set up the Verlet integrator.
-
-### Fields
-
-* ∇V!   - In place gradient of the potential
-* M     - Mass (either scalar or vector)
-* Δt    - Time step
-"""
 struct Verlet{TGV, TF<:AbstractFloat, TM} <: SecondOrderNonMetropolisSampler
     ∇V!::TGV
     M::TM
     Δt::TF
+    
+    """
+    Verlet(∇V!, M, Δt)
+    Set up the Verlet integrator.
+
+    ### Fields
+
+    * ∇V!   - In place gradient of the potential
+    * M     - Mass (either scalar or vector)
+    * Δt    - Time step
+    """
+    function Verlet{TGV, TF, TM}(∇V!::TGV, M::TM, Δt::TF) where {TGV, TF<:AbstractFloat, TM} 
+        return new(∇V!, M, Δt)
+    end 
 end
 
 mutable struct VerletState{Tq, Tx<:AbstractVector{Tq}} <:SecondOrderNonMetropolisSamplerState
