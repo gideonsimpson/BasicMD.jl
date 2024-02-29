@@ -6,7 +6,7 @@ struct EM{TGV, TF<:AbstractFloat} <: FirstOrderNonMetropolisSampler
 end
 
 """
-    EM(∇V!, β, γ, M, Δt)
+    EM(∇V!, β, Δt)
 
 Set up the EM integrator for overdamped Langevin.
 

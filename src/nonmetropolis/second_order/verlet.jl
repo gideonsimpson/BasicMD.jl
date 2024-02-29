@@ -1,6 +1,5 @@
 """
-    Verlet(∇V!, M, Δt)
-
+Verlet(∇V!, M, Δt)
 Set up the Verlet integrator.
 
 ### Fields
@@ -13,6 +12,7 @@ struct Verlet{TGV, TF<:AbstractFloat, TM} <: SecondOrderNonMetropolisSampler
     ∇V!::TGV
     M::TM
     Δt::TF
+    
 end
 
 mutable struct VerletState{Tq, Tx<:AbstractVector{Tq}} <:SecondOrderNonMetropolisSamplerState

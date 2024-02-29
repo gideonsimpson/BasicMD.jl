@@ -54,8 +54,6 @@ function InitState(x₀, sampler::HMC)
     return HMCState(deepcopy(x₀), similar(x₀), V, V, V, V, similar(x₀), similar(x₀), similar(x₀),similar(x₀), Int(0));
 end
 
-#
-# function Verlet!(q, p, ∇V!, M, Δt, nΔt, p_mid, ∇V)
 function Verlet!(state::HMCState, sampler::HMC)
 
     sampler.∇V!(state.∇V, state.x_proposal);
