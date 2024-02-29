@@ -18,7 +18,8 @@ development.  Larger problems will best be handled with
 
 # Overview
 This module has been significantly reorganized to better take advantage of
-multiple dispatch.  The older versions are still available in `deprecated.jl` as a part of the module `OldBasicMD`, if needed.
+multiple dispatch.  The older versions are still available in `deprecated/` as a
+part of the module `OldBasicMD`, if needed.
 
 This module can be added with the command:
 ```
