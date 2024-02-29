@@ -1,7 +1,7 @@
 # sampling functions
 
 """
-    sample_trajectory!(x, sampler; options=MDOptions())
+    sample_trajectory!(x::Tx, sampler::S, constraints::C; options = MDOptions()) where {Tx,S<:AbstractSampler,C<:AbstractConstraints}
 
 In place applciation of the `sampler` to `x`.  Number of iterations are
 set using the `options` argument.
@@ -31,7 +31,7 @@ function sample_trajectory!(x::Tx, sampler::S, constraints::C; options = MDOptio
 end
 
 """
-    sample_trajectory(x₀, sampler; options=MDOptions())
+    sample_trajectory(x₀::Tx, sampler::S, constraints::C; options = MDOptions()) where {Tx,S<:MetropolisSampler,C<:AbstractConstraints}
 
 Run the `sampler` starting at `x₀`.  Number of iterations and interval between
 saves are set using the `options` argument.  For Metropolis samplers, the
@@ -39,7 +39,7 @@ running acceptance rates are also resturned.
 
 
 ### Fields
-* `x`         - Starting position for sampler, modified in place
+* `x`         - Starting position for sampler
 * `sampler`   - Desired sampler
 * `constraints` - Constraints on the trajectory
 ### Optional Fields
@@ -95,7 +95,8 @@ function sample_trajectory(x₀::Tx, sampler::S, constraints::C; options = MDOpt
 end
 
 """
-    sample_observables(x₀, sampler, observables; options=MDOptions())
+    sample_observables(x₀::Tx, sampler::S, constraints::C, observables::Tuple{Vararg{<:Function,NO}};
+    options = MDOptions()) where {Tx,S<:AbstractSampler,NO,C<:AbstractConstraints}
 
 Run the `sampler` starting at `x₀`, evaluating the trajectory on a tuple of
 `observables` scalar functions.  Number of iterations and interval between saves

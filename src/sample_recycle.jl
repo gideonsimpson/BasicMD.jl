@@ -71,7 +71,7 @@ running acceptance rates are also resturned.
 
 
 ### Fields
-* `x`         - Starting position for sampler, modified in place
+* `x`         - Starting position for sampler
 * `recycler`  - Recycling structure for A→B transitions
 * `sampler`   - Desired sampler
 * `options`   - Sampling options, including number of iteration
