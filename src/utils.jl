@@ -37,13 +37,3 @@ function Boltzmann_likelihood(x, V, β)
     w = exp(-β * V(x))
     return w
 end
-
-"""
-`trivial_constraint!` - Trivial constraint function 
-### Fields
-* `state` - Current state of the sampler
-* `i`     - Index of current iterate
-"""
-function trivial_constraint!(state, i)
-    state
-end
