@@ -107,8 +107,8 @@ Pages = ["examples/sample_obs1.md"]
 
 
 
-## Sampling with Constraints (EXPERIMENTAL)
-Elementary tools for enforcing constraints on the system, like ``X_t \in A`` or
+## Sampling with Constraints and Nonequilibrium Proccesses
+Elementary, experimental, tools for enforcing constraints on the system, like ``X_t \in A`` or
 ``g(X_t)=0`` have been implemented.  This is accomplished by passing a
 `constraints` structure to one of `sample_trajectory!`, `sample_trajectory`, or `sample_obsevables`:
 ```
@@ -123,8 +123,15 @@ A key motivation for including this constraint module was to be able to sample f
 non-equilibrium steady states.  In particular, consider the case that we have a
 (continuous) trajectory, ``X_t`` with ``X_0 = x_0``.  When ``X_t`` arrives at some set ``B``, it __recycles__ to ``x_0``, and repeats.  Running this process to equilibrium and computing the particle flux into set ``B`` allows one to estimate the Mean First Passage Time (MFPT) form ``x_0\to B``:
 ```math
-\frac{1}{\text{Mean First Passage Time}} = \lim_{T\to \infty} \frac{\text{Cumulative \# of arrivals at $B$ till time $T$}}{T} 
+\frac{1}{\text{MFPT}} = \lim_{T\to \infty} \frac{\text{Cumulative \# of arrivals at $B$ till time $T$}}{T} 
 ```
 This can be approximated in a finite time simulation with time step ``\Delta t`` by the expression
 ```math
+\frac{1}{\text{MFPT}} \approx \frac{1}{N \Delta t } \sum_{k=0}^{N-1} 1_B(\tilde{X}_k)
+```
+Here, $\tilde{X}_k$ is a modified discrete-in-time process that resets to $x_0$ upon arrival at ``B``. In the case that we are using an Euler-Maruyama integrator, this corresponds to
+```math
+\tilde{X}_{k+1} = \begin{cases} \tilde{X}_k - \nabla V(\tilde{X}_k) \Delta t   + \sqrt{2\beta^{-1}\Delta t}\xi_{k+1} & \tilde{X}_k \notin B\\
+x_0 & \tilde{X}_k \in B
+\end{cases}
 ```

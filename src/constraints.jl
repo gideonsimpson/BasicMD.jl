@@ -13,6 +13,7 @@ struct Constraints{TA,TB,TI<:Integer} <: AbstractConstraints
     after_update!::TB
     n_before::TI
     n_after::TI
+
 end
 
 """
