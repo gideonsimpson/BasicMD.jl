@@ -13,3 +13,11 @@ using Statistics
     @test include("rwm/rwm5.jl")
 end
 
+@testset "EM" begin
+    @test include("em/em1.jl")
+    @test include("em/em2.jl")
+    @test include("em/em3.jl")
+    @test include("em/em4.jl")
+    @test include("em/em5.jl")
+end
+
