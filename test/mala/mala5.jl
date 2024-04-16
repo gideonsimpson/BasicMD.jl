@@ -16,6 +16,7 @@ let
     function recycler!(state::BasicMD.MALAState)
         if state.x[1] > b
             @. state.x = a
+            state.V = V(a)
             gradV!(state.∇V, a)
         end
         state
@@ -31,5 +32,5 @@ let
 
     Random.seed!(100)
     observable_samples = sample_observables(x₀, sampler, recycler, observables, options=opts)
-    mean(observable_samples[1, :]) ≈ -0.9399926863316217
+    mean(observable_samples[1, :]) ≈ -0.9399721116974356
 end

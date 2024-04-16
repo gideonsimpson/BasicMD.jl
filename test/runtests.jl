@@ -29,3 +29,11 @@ end
     @test include("mala/mala5.jl")
 end
 
+@testset "HMC" begin
+    @test include("hmc/hmc1.jl")
+    @test include("hmc/hmc2.jl")
+    @test include("hmc/hmc3.jl")
+    @test include("hmc/hmc4.jl")
+    @test include("hmc/hmc5.jl")
+end
+

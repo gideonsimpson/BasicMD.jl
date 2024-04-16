@@ -3,6 +3,8 @@ let
     x₀ = [-1.0]
     seed = 100
     Δt = 1e-1
+    nΔt = 10
+    M = 1.0
     n_iters = 10^4;
     opts = MDOptions(n_iters=n_iters)
 
@@ -12,21 +14,20 @@ let
     # define the recycling functions
     a = [-1.0]
     b = 0.9
-    function recycler!(state::BasicMD.MALAState)
+    function recycler!(state::BasicMD.HMCState)
         if state.x[1] > b
             @. state.x = a;
             state.V = V(a)
-            gradV!(state.∇V, a)
         end
         state
     end
 
     recycler = Constraints(recycler!, trivial_constraint!, 1, 1)
 
-    sampler = MALA(V, gradV!, β, Δt)
+    sampler = HMC(V, gradV!, β, M, Δt, nΔt)
 
     Random.seed!(100)
     X₀ = copy(x₀)
     sample_trajectory!(X₀, sampler, recycler, options=opts)
-    X₀[1] ≈ -0.8629548457902466
+    X₀[1] ≈ -1.1104705095359382
 end
