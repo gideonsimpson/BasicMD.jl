@@ -21,3 +21,11 @@ end
     @test include("em/em5.jl")
 end
 
+@testset "MALA" begin
+    @test include("mala/mala1.jl")
+    @test include("mala/mala2.jl")
+    @test include("mala/mala3.jl")
+    @test include("mala/mala4.jl")
+    @test include("mala/mala5.jl")
+end
+
