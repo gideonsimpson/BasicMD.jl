@@ -37,3 +37,10 @@ end
     @test include("hmc/hmc5.jl")
 end
 
+@testset "BBK" begin
+    @test include("bbk/bbk1.jl")
+    @test include("bbk/bbk2.jl")
+    @test include("bbk/bbk3.jl")
+    @test include("bbk/bbk4.jl")
+    @test include("bbk/bbk5.jl")
+end
