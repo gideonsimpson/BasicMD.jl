@@ -52,3 +52,11 @@ end
     @test include("gjf/gjf4.jl")
     @test include("gjf/gjf5.jl")
 end
+
+@testset "ABOBA" begin
+    @test include("aboba/aboba1.jl")
+    @test include("aboba/aboba2.jl")
+    @test include("aboba/aboba3.jl")
+    @test include("aboba/aboba4.jl")
+    @test include("aboba/aboba5.jl")
+end
