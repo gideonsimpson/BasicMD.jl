@@ -60,3 +60,11 @@ end
     @test include("aboba/aboba4.jl")
     @test include("aboba/aboba5.jl")
 end
+
+@testset "BAOAB" begin
+    @test include("baoab/baoab1.jl")
+    @test include("baoab/baoab2.jl")
+    @test include("baoab/baoab3.jl")
+    @test include("baoab/baoab4.jl")
+    @test include("baoab/baoab5.jl")
+end
