@@ -44,3 +44,11 @@ end
     @test include("bbk/bbk4.jl")
     @test include("bbk/bbk5.jl")
 end
+
+@testset "GJF" begin
+    @test include("gjf/gjf1.jl")
+    @test include("gjf/gjf2.jl")
+    @test include("gjf/gjf3.jl")
+    @test include("gjf/gjf4.jl")
+    @test include("gjf/gjf5.jl")
+end
