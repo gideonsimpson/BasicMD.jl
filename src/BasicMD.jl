@@ -73,7 +73,7 @@ export GJF
 # Verlet methods
 include("nonmetropolis/second_order/verlet.jl")
 export Verlet
-# EM methods
+# LM methods
 include("nonmetropolis/first_order/lm.jl")
 export LM
 end

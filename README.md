@@ -5,6 +5,7 @@
 
 A collection of basic routines for Molecular Dynamics simulations written in Julia.  These include
 * Euler–Maruyama (EM)
+* Leimkuhler-Matthews (LM)
 * Random Walk Metropolis (RWM)
 * Metropolis Adjusted Langevin (MALA)
 * Brünger, Brooks and Karplus (BBK)

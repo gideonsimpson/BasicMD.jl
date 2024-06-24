@@ -9,6 +9,7 @@ approximation of ``\mu(x) \propto e^{-\beta V(x)}``.   This bias vanishes with
 These methods are in the spirit of first order in time discretizations.
 ```@docs
     EM(∇V!::TGV, β::TF, Δt::TF) where{TGV, TF<:AbstractFloat}
+    LM(∇V!::TGV, β::TF, Δt::TF) where{TGV, TF<:AbstractFloat}
 ```
 
 ## Second Order Methods
