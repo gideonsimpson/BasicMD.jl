@@ -1,4 +1,11 @@
-push!(LOAD_PATH,"../src/")
+if abspath(PROGRAM_FILE) == @__FILE__
+    # When running the `make.jl` file as a script, automatically activate the
+    # `docs` environment and dev-install the main package into that environment
+    import Pkg
+    Pkg.activate(@__DIR__)
+    Pkg.develop(path=joinpath(@__DIR__, ".."))
+    Pkg.instantiate()
+end
 using BasicMD
 using Documenter
 makedocs(checkdocs=:none,
