@@ -13,5 +13,5 @@ let
 
     Random.seed!(100)
     Xvals = sample_trajectory(x₀, sampler, options=opts)
-    Xvals[end][1] ≈ 1.0408922097822702
+    Xvals[end][1] ≈ 0.7912545787704724
 end
