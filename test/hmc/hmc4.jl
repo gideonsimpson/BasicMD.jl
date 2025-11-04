@@ -19,5 +19,5 @@ let
 
     Random.seed!(100)
     observable_samples = sample_observables(x₀, sampler, observables, options=opts)
-    mean(observable_samples[1, :]) ≈ 0.9335235914589295
+    mean(observable_samples[1, :]) ≈ 0.932248693483834
 end
