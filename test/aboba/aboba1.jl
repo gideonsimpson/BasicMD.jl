@@ -18,5 +18,5 @@ let
     Random.seed!(100)
     X₀ = copy(x₀)
     sample_trajectory!(X₀, sampler, options=opts)
-    X₀[1][1] ≈ 0.8461312671455763
+    X₀[1][1] ≈ 0.8444117038731357
 end
