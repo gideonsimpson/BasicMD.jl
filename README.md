@@ -102,7 +102,6 @@ Both will sample the associated Boltzmann distribution, but the SDE trajectories
 # TO DO
 Before reaching a 1.0, the goals are:
 * Include GHMC samplers.  
-* Add to the package registry
 
 # Acknowledgements
 This work was supported in part by the US National Science Foundation Grant DMS-1818716.
